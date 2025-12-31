@@ -1,1 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supreme VIP JCZ Tours | Dominican Republic</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --primary: #00897b; /* Tropical Teal */
+            --secondary: #ffb300; /* Sunny Yellow */
+            --dark: #263238;
+            --light: #f5f5f5;
+            --white: #ffffff;
+            --accent: #ff5722;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .logo span { color: var(--secondary); }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .cart-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .cart-btn:hover { background-color: #00695c; }
+        .cart-count { font-weight: bold; background: var(--secondary); color: var(--dark); padding: 2px 6px; border-radius: 50%; font-size: 0.8rem; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1524777313293-86d2ab46199b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+        }
+
+        /* --- SEARCH SECTION --- */
+        .search-container {
+            max-width: 1200px;
+            margin: -30px auto 20px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-box {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            min-width: 200px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #eee;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* --- TOURS GRID --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary);
+        }
+
+        .tours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .tour-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tour-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tour-image {
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .category-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .tour-details {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tour-title {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .tour-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .tour-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .add-btn {
+            background-color: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .add-btn:hover { background-color: #e64a19; }
+
+        /* --- CART MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .close-btn:hover { color: var(--dark); }
+
+        .cart-items { margin-bottom: 20px; }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .remove-item {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .checkout-btn:hover { background: #00695c; }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+        .footer-links {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .search-box { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <div class="logo">Supreme<span>VIP</span></div>
+            <div class="nav-links">
+                <div class="cart-btn" onclick="openModal()">
+                    Booking <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Experience the Dominican Republic</h1>
+            <p>From Saona Island to Zip Lines, find your perfect adventure with Supreme VIP JCZ Tours.</p>
+        </div>
+    </section>
+
+    <section class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search activities (e.g., Boat, Safari, Dolphins)..." onkeyup="filterTours()">
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterCategory('all')">All</button>
+                <button class="filter-btn" onclick="filterCategory('Water')">Water</button>
+                <button class="filter-btn" onclick="filterCategory('Adventure')">Adventure</button>
+                <button class="filter-btn" onclick="filterCategory('Nightlife')">Nightlife</button>
+                <button class="filter-btn" onclick="filterCategory('Nature')">Nature</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Our Exclusive Activities</h2>
+        <div class="tours-grid" id="toursGrid">
+            </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Booking Request</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <p>No activities selected yet.</p>
+            </div>
+            <div class="cart-total" id="cartTotal">Total Estimate: $0</div>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Payment / Request</button>
+        </div>
+    </div>
+
+    <footer>
+        <h3>Supreme VIP JCZ Tours</h3>
+        <p>Your gateway to paradise in the Dominican Republic.</p>
+        <div class="footer-links">
+            <p>&copy; 2025 Supreme VIP JCZ Tours. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        [cite_start]// Data derived directly from the provided PDF contents [cite: 1-19]
+        const toursData = [
+            [cite_start]{ id: 1, name: "Saona Island", category: "Water", price: 85, image: "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=600&q=80", desc: "The ultimate Caribbean paradise with turquoise waters. [cite: 2]" },
+            [cite_start]{ id: 2, name: "Catalina Island", category: "Water", price: 75, image: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=600&q=80", desc: "Famous for snorkeling and crystal clear beaches. [cite: 3]" },
+            [cite_start]{ id: 3, name: "Santo Domingo City", category: "Nature", price: 90, image: "https://images.unsplash.com/photo-1596423985558-a53e6c039985?auto=format&fit=crop&w=600&q=80", desc: "Explore the history and culture of the capital. [cite: 4]" },
+            [cite_start]{ id: 4, name: "Samana Explorer", category: "Nature", price: 120, image: "https://images.unsplash.com/photo-1589785233216-d39a3f2d0113?auto=format&fit=crop&w=600&q=80", desc: "Discover lush landscapes and beautiful bays. [cite: 5]" },
+            [cite_start]{ id: 5, name: "Los Haitises", category: "Nature", price: 95, image: "https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=600&q=80", desc: "National park with mangroves, caves, and bird watching. [cite: 6]" },
+            [cite_start]{ id: 6, name: "Zipline Adventure", category: "Adventure", price: 65, image: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?auto=format&fit=crop&w=600&q=80", desc: "Fly through the jungle canopy. [cite: 7]" },
+            [cite_start]{ id: 7, name: "Horseback Riding", category: "Nature", price: 50, image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=600&q=80", desc: "Ride through local trails and nature at Ranch Caballos. [cite: 8]" },
+            { id: 8, name: "La Hacienda Park", category: "Adventure", price: 99, image: "https://images.unsplash.com/photo-1533644026857-463e264585c4?auto=format&fit=crop&w=600&q=80", desc: "7 experiences in 1! [cite_start]Where adventure lives. [cite: 9]" },
+            [cite_start]{ id: 9, name: "Private Catamaran", category: "Water", price: 500, image: "https://images.unsplash.com/photo-1566418872583-04e38e19c3b0?auto=format&fit=crop&w=600&q=80", desc: "Exclusive sailing experience for your group. [cite: 10]" },
+            [cite_start]{ id: 10, name: "Speed Boat", category: "Adventure", price: 70, image: "https://images.unsplash.com/photo-1574347201732-f1262d6657c6?auto=format&fit=crop&w=600&q=80", desc: "Adrenaline on the waves. [cite: 11]" },
+            [cite_start]{ id: 11, name: "Coco Bongo", category: "Nightlife", price: 80, image: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?auto=format&fit=crop&w=600&q=80", desc: "World-famous show, disco, and performance. [cite: 12]" },
+            [cite_start]{ id: 12, name: "Dolphin Swim", category: "Water", price: 110, image: "https://images.unsplash.com/photo-1570415309668-3e9a4f610332?auto=format&fit=crop&w=600&q=80", desc: "Interact and swim with friendly dolphins. [cite: 12]" },
+            { id: 13, name: "Scuba Doo", category: "Water", price: 60, image: "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?auto=format&fit=crop&w=600&q=80", desc: "Underwater scooter experience. [cite_start]No diving skills needed. [cite: 13]" },
+            [cite_start]{ id: 14, name: "Party Boat", category: "Nightlife", price: 55, image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80", desc: "Music, drinks, and fun on the ocean. [cite: 16]" },
+            [cite_start]{ id: 15, name: "Deep Sea Fishing", category: "Water", price: 130, image: "https://images.unsplash.com/photo-1520114878144-6123749968dd?auto=format&fit=crop&w=600&q=80", desc: "Catch local big game fish in the deep blue. [cite: 17]" },
+            [cite_start]{ id: 16, name: "Parasailing", category: "Adventure", price: 60, image: "https://images.unsplash.com/photo-1471696035578-3d8c78d99684?auto=format&fit=crop&w=600&q=80", desc: "Soar high above the coastline. [cite: 15]" },
+            [cite_start]{ id: 17, name: "Buggy Adventure", category: "Adventure", price: 75, image: "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?auto=format&fit=crop&w=600&q=80", desc: "Off-road muddy fun through the countryside. [cite: 16]" },
+            [cite_start]{ id: 18, name: "Safari Supreme", category: "Nature", price: 85, image: "https://images.unsplash.com/photo-1521651201144-634ffa7f6bf2?auto=format&fit=crop&w=600&q=80", desc: "Cultural truck safari to see the real Dominican life. [cite: 17]" },
+            [cite_start]{ id: 19, name: "Glass Bottom Boat", category: "Water", price: 45, image: "https://images.unsplash.com/photo-1534008745260-449a5b672727?auto=format&fit=crop&w=600&q=80", desc: "See marine life without getting wet. [cite: 18]" },
+            [cite_start]{ id: 20, name: "Scape Park", category: "Adventure", price: 129, image: "https://images.unsplash.com/photo-1502479901194-6b22c7a4d53b?auto=format&fit=crop&w=600&q=80", desc: "Cenotes, zip lines, and caves in Cap Cana. [cite: 19]" }
+        ];
+
+        let cart = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTours(toursData);
+        });
+
+        // Render tours
+        function renderTours(tours) {
+            const grid = document.getElementById('toursGrid');
+            grid.innerHTML = '';
+
+            if(tours.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No activities found matching your criteria.</p>';
+                return;
+            }
+
+            tours.forEach(tour => {
+                const card = document.createElement('div');
+                card.className = 'tour-card';
+                card.innerHTML = `
+                    <div class="tour-image" style="background-image: url('${tour.image}')">
+                        <span class="category-tag">${tour.category}</span>
+                    </div>
+                    <div class="tour-details">
+                        <h3 class="tour-title">${tour.name}</h3>
+                        <p class="tour-desc">${tour.desc}</p>
+                        <div class="tour-footer">
+                            <span class="price">$${tour.price} <small>est.</small></span>
+                            <button class="add-btn" onclick="addToCart(${tour.id})">Add to Booking</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Logic
+        function filterTours() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            // Get active category
+            const activeBtn = document.querySelector('.filter-btn.active');
+            const category = activeBtn ? activeBtn.innerText : 'All';
+
+            const filtered = toursData.filter(tour => {
+                const matchesSearch = tour.name.toLowerCase().includes(searchTerm) || tour.category.toLowerCase().includes(searchTerm);
+                const matchesCategory = category === 'All' || tour.category === category;
+                return matchesSearch && matchesCategory;
+            });
+
+            renderTours(filtered);
+        }
+
+        function filterCategory(cat) {
+            // Update UI buttons
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            filterTours(); // Re-run filter
+        }
+
+        // Cart Logic
+        function addToCart(id) {
+            const tour = toursData.find(t => t.id === id);
+            cart.push(tour);
+            updateCartUI();
+            alert(`${tour.name} added to booking request!`);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+            
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p>No activities selected yet.</p>';
+                cartTotal.innerText = 'Total Estimate: $0';
+            } else {
+                let html = '';
+                let total = 0;
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    html += `
+                        <div class="cart-item">
+                            <span>${item.name}</span>
+                            <div>
+                                <span>$${item.price}</span>
+                                <span class="remove-item" onclick="removeFromCart(${index})">&times;</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                cartItemsContainer.innerHTML = html;
+                cartTotal.innerText = `Total Estimate: $${total}`;
+            }
+        }
+
+        // Modal Logic
+        function openModal() {
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function checkout() {
+            if(cart.length === 0) {
+                alert("Please select an activity first.");
+                return;
+            }
+            alert("Thank you! This is a demo site. In a real version, you would now be redirected to a payment gateway (Stripe/PayPal) or a WhatsApp contact form to finalize your booking.");
+            cart = [];
+            updateCartUI();
+            closeModal();
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+  </html>
