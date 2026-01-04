@@ -6,644 +6,327 @@
     <title>Supreme VIP JCZ Tours | Dominican Republic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- 1. RESET & VARIABLES --- */
         :root {
-            --primary: #00897b;   /* Teal for Caribbean Water */
+            --primary: #00897b;
             --primary-dark: #00695c;
-            --secondary: #ffb300; /* Sun Yellow */
-            --dark: #37474f;
-            --light: #eceff1;
+            --accent: #ffb300;
+            --bg: #f8f9fa;
+            --text: #2c3e50;
             --white: #ffffff;
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
-            --font-stack: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body {
-            font-family: var(--font-stack);
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
 
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-
-        /* --- 2. HEADER & NAVIGATION --- */
+        /* Navigation */
         header {
             background: var(--white);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-
-        .navbar {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .logo span { color: var(--secondary); }
-
-        .nav-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        /* Language Toggle Buttons */
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+        
+        .nav-btns { display: flex; gap: 10px; }
         .lang-btn {
             border: 2px solid var(--primary);
             background: transparent;
             color: var(--primary);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-weight: bold;
+            transition: 0.3s;
         }
+        .lang-btn.active { background: var(--primary); color: var(--white); }
 
-        .lang-btn:hover, .lang-btn.active {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        /* --- 3. HERO SECTION --- */
+        /* Hero Section */
         .hero {
-            position: relative;
-            height: 60vh;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=1920&q=80');
+            height: 50vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=1600&q=80');
             background-size: cover;
             background-position: center;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
+            color: white;
             text-align: center;
-            color: var(--white);
             padding: 20px;
         }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
 
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
-        }
-        
-        .hero-content p {
-            font-size: 1.4rem;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
-            max-width: 800px;
-        }
-
-        /* --- 4. SEARCH BAR --- */
-        .search-container {
+        /* Search Area */
+        .search-section {
             background: var(--primary);
-            padding: 30px 20px;
-            text-align: center;
-            margin-bottom: 40px;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
         }
-
         .search-input {
             width: 100%;
             max-width: 600px;
             padding: 15px 25px;
-            border-radius: 50px;
+            border-radius: 30px;
             border: none;
             font-size: 1.1rem;
+            box-shadow: var(--shadow);
             outline: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: 0.3s;
-        }
-        .search-input:focus {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transform: scale(1.01);
         }
 
-        /* --- 5. TOURS GRID --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px 60px;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2rem;
-            color: var(--dark);
-        }
-
-        .tours-grid {
+        /* Tours Grid */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
         }
 
-        /* Tour Card Styling */
+        /* Tour Card */
         .card {
             background: var(--white);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(0,0,0,0.05);
         }
-
-        .card:hover {
-            transform: translateY(-8px);
-        }
-
-        .card-image {
-            height: 220px;
-            background-color: #ddd;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        .price-badge {
+        .card:hover { transform: translateY(-10px); }
+        .card-img { height: 200px; background-size: cover; background-position: center; position: relative; }
+        .price-tag {
             position: absolute;
             bottom: 15px;
             right: 15px;
-            background: var(--secondary);
-            color: var(--dark);
-            padding: 6px 12px;
+            background: var(--accent);
+            color: #000;
+            padding: 5px 15px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        .card-body {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--primary-dark);
-        }
-
-        .card-desc {
-            font-size: 0.95rem;
-            color: #666;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
+        .card-text { font-size: 0.9rem; color: #666; margin-bottom: 20px; flex-grow: 1; }
+        
         .btn-book {
             background: var(--primary);
-            color: var(--white);
+            color: white;
             border: none;
             padding: 12px;
-            width: 100%;
             border-radius: 8px;
             font-weight: bold;
-            text-transform: uppercase;
             cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            width: 100%;
+            transition: 0.3s;
         }
+        .btn-book:hover { background: var(--primary-dark); }
 
-        .btn-book:hover {
-            background: var(--primary-dark);
-        }
-
-        /* --- 6. MODAL (PAYMENT) --- */
+        /* Payment Modal */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            width: 90%;
-            max-width: 500px;
-            border-radius: 12px;
-            padding: 30px;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #aaa;
-        }
-        .close-btn:hover { color: var(--dark); }
-
-        .checkout-summary {
-            background: #e0f2f1;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 5px solid var(--primary);
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        .cc-icons { font-size: 2rem; margin: 10px 0; color: #555; display: flex; gap: 10px; }
-        .row { display: flex; gap: 15px; }
-        .col { flex: 1; }
-
-        .btn-pay {
-            width: 100%;
-            padding: 15px;
-            background: var(--secondary);
-            color: var(--dark);
-            border: none;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn-pay:hover { background: #ffca28; }
-
-        .success-message {
             display: none;
-            text-align: center;
-            color: green;
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 1.1rem;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
         }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 95%;
+            max-width: 500px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; }
+        
+        .checkout-header { border-bottom: 1px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+        .cc-row { display: flex; gap: 10px; }
+        
+        .btn-pay {
+            background: var(--accent);
+            color: #000;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .success-overlay { display: none; text-align: center; padding: 20px; }
+        .success-overlay i { font-size: 50px; color: #4caf50; margin-bottom: 15px; }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .hero-content h1 { font-size: 2.5rem; }
-            .navbar { flex-direction: column; gap: 10px; }
+            .hero h1 { font-size: 2.2rem; }
+            header { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="navbar">
-            <div class="logo">Supreme<span>VIP</span> JCZ</div>
-            <div class="nav-controls">
-                <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" id="btn-es" onclick="setLanguage('es')">ES</button>
-            </div>
+        <div class="logo">Supreme<span>VIP</span> JCZ</div>
+        <div class="nav-btns">
+            <button class="lang-btn active" id="en-btn" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="es-btn" onclick="setLang('es')">Español</button>
         </div>
     </header>
 
     <section class="hero">
-        <div class="hero-content">
-            <h1 data-key="heroTitle">Explore The Dominican Republic</h1>
-            <p data-key="heroSubtitle">The most exclusive tours & adventures await you.</p>
-        </div>
+        <h1 id="hero-title">Experience Paradise</h1>
+        <p id="hero-sub">The most exclusive excursions in the Dominican Republic</p>
     </section>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search activities (e.g. Saona, Buggies, Dolphins)..." onkeyup="renderTours()">
+    <div class="search-section">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search adventures..." onkeyup="filterTours()">
     </div>
 
     <div class="container">
-        <h2 class="section-title" data-key="activitiesHeader">Available Excursions</h2>
-        <div class="tours-grid" id="toursGrid">
-            </div>
+        <div class="grid" id="toursGrid"></div>
     </div>
 
-    <div id="paymentModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 style="margin-bottom: 15px;" data-key="checkoutTitle">Secure Checkout</h2>
-            
-            <div class="checkout-summary">
-                <h3 id="modalTourName">Tour Name</h3>
-                <p id="modalTourPrice" style="font-weight: bold; color: var(--primary);">Price: $00.00</p>
+    <div class="modal" id="paymentModal">
+        <div class="modal-content" id="modalMain">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="formContainer">
+                <div class="checkout-header">
+                    <h2 id="modal-tour-name">Tour Name</h2>
+                    <p id="modal-tour-price" style="color: var(--primary); font-weight: bold;"></p>
+                </div>
+                <form onsubmit="processPayment(event)">
+                    <div class="form-group">
+                        <label id="lbl-date">Travel Date</label>
+                        <input type="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="lbl-name">Full Name</label>
+                        <input type="text" class="form-control" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="lbl-card">Card Number</label>
+                        <input type="text" class="form-control" placeholder="1234 5678 9101 1121" maxlength="19" required>
+                    </div>
+                    <div class="cc-row">
+                        <div class="form-group" style="flex:2">
+                            <label id="lbl-exp">Expiry (MM/YY)</label>
+                            <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label>CVV</label>
+                            <input type="text" class="form-control" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-pay" id="btn-pay-now">Book & Pay Now</button>
+                </form>
             </div>
-
-            <form id="paymentForm" onsubmit="processPayment(event)">
-                <div class="form-group">
-                    <label data-key="labelDate">Select Date</label>
-                    <input type="date" id="bookingDate" class="form-control" required>
-                </div>
-
-                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-                <h4 data-key="labelCardDetails">Payment Details</h4>
-                <div class="cc-icons">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-cc-amex"></i>
-                </div>
-
-                <div class="form-group">
-                    <label data-key="labelName">Cardholder Name</label>
-                    <input type="text" placeholder="John Doe" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label data-key="labelCardNum">Card Number</label>
-                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" class="form-control" required>
-                </div>
-
-                <div class="row">
-                    <div class="col form-group">
-                        <label data-key="labelExpiry">Expiry</label>
-                        <input type="text" placeholder="MM/YY" maxlength="5" class="form-control" required>
-                    </div>
-                    <div class="col form-group">
-                        <label>CVV</label>
-                        <input type="text" placeholder="123" maxlength="4" class="form-control" required>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-pay" id="payBtn">
-                    <span data-key="btnPay">Pay & Book Now</span>
-                </button>
-
-                <div class="success-message" id="successMsg">
-                    <i class="fas fa-check-circle"></i> <span data-key="msgSuccess">Booking Confirmed! Check your email.</span>
-                </div>
-            </form>
+            <div id="successMsg" class="success-overlay">
+                <i class="fas fa-check-circle"></i>
+                <h2 id="msg-success-title">Payment Confirmed!</h2>
+                <p id="msg-success-body">Your tickets have been sent to your email.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        /* --- 1. DATA (From PDF) --- */
-        const toursData = [
-            {
-                id: 1,
-                name: { en: "Saona Island VIP", es: "Isla Saona VIP" },
-                desc: { en: "The Caribbean's #1 paradise. Speedboat, natural pool, buffet & open bar.", es: "El paraíso #1 del Caribe. Lancha rápida, piscina natural, buffet y barra libre." },
-                price: 85,
-                image: "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 2,
-                name: { en: "Catalina Island", es: "Isla Catalina" },
-                desc: { en: "Best snorkeling in DR. Crystal clear waters and coral reefs.", es: "El mejor snorkel en RD. Aguas cristalinas y arrecifes de coral." },
-                price: 75,
-                image: "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 3,
-                name: { en: "Santo Domingo City", es: "Ciudad Santo Domingo" },
-                desc: { en: "Historical tour of the first city in the Americas. Colonial Zone.", es: "Recorrido histórico por la primera ciudad de América. Zona Colonial." },
-                price: 90,
-                image: "https://images.unsplash.com/photo-1596423985558-a53e6c039985?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 4,
-                name: { en: "Samana Explorer", es: "Excursión a Samaná" },
-                desc: { en: "Visit El Limon Waterfall and Bacardi Island (Cayo Levantado).", es: "Visita la Cascada El Limón y la Isla Bacardí (Cayo Levantado)." },
-                price: 120,
-                image: "https://images.unsplash.com/photo-1589785233216-d39a3f2d0113?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 5,
-                name: { en: "Los Haitises Park", es: "Parque Los Haitises" },
-                desc: { en: "Boat tour through mangroves, caves, and bird sanctuaries.", es: "Paseo en barco por manglares, cuevas y santuarios de aves." },
-                price: 95,
-                image: "https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 6,
-                name: { en: "Jungle Zipline", es: "Zipline en la Selva" },
-                desc: { en: "Adrenaline adventure flying over the tropical canopy.", es: "Aventura de adrenalina volando sobre el dosel tropical." },
-                price: 65,
-                image: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 7,
-                name: { en: "Horseback Riding", es: "Montar a Caballo" },
-                desc: { en: "Relaxing ride at Rancho Caballos through nature trails.", es: "Paseo relajante en Rancho Caballos por senderos naturales." },
-                price: 55,
-                image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 8,
-                name: { en: "La Hacienda Park", es: "Parque La Hacienda" },
-                desc: { en: "7 Activities: Buggies, horses, ziplines, chairlift & buffet.", es: "7 Actividades: Buggies, caballos, tirolesas, telesilla y buffet." },
-                price: 99,
-                image: "https://images.unsplash.com/photo-1533644026857-463e264585c4?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 9,
-                name: { en: "Private Catamaran", es: "Catamarán Privado" },
-                desc: { en: "Luxury sailing exclusively for your group. Open bar & music.", es: "Navegación de lujo exclusiva para su grupo. Barra libre y música." },
-                price: 500,
-                image: "https://images.unsplash.com/photo-1566418872583-04e38e19c3b0?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 10,
-                name: { en: "Speed Boat", es: "Lancha Rápida" },
-                desc: { en: "Drive your own speed boat across the Caribbean waves.", es: "Conduce tu propia lancha rápida sobre las olas del Caribe." },
-                price: 75,
-                image: "https://images.unsplash.com/photo-1574347201732-f1262d6657c6?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 11,
-                name: { en: "Dolphin Swim", es: "Nado con Delfines" },
-                desc: { en: "Unforgettable interaction: hugs, kisses, and swimming.", es: "Interacción inolvidable: abrazos, besos y natación." },
-                price: 115,
-                image: "https://images.unsplash.com/photo-1570415309668-3e9a4f610332?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 12,
-                name: { en: "Scuba Doo", es: "Scuba Doo" },
-                desc: { en: "Underwater scooter. No diving certification needed.", es: "Moto submarina. No se necesita certificación de buceo." },
-                price: 60,
-                image: "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 13,
-                name: { en: "Party Boat", es: "Barco de Fiesta" },
-                desc: { en: "Snorkeling, natural pool, drinks, animation and dancing.", es: "Snorkel, piscina natural, bebidas, animación y baile." },
-                price: 55,
-                image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 14,
-                name: { en: "Buggy Adventure", es: "Aventura en Buggy" },
-                desc: { en: "Off-road muddy fun exploring the countryside and Macao beach.", es: "Diversión todoterreno explorando el campo y la playa Macao." },
-                price: 70,
-                image: "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 15,
-                name: { en: "Deep Sea Fishing", es: "Pesca de Altura" },
-                desc: { en: "Catch Marlin, Mahi-Mahi and Barracuda in the deep blue.", es: "Pesca Marlin, Dorado y Barracuda en el azul profundo." },
-                price: 130,
-                image: "https://images.unsplash.com/photo-1520114878144-6123749968dd?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 16,
-                name: { en: "Coco Bongo", es: "Coco Bongo" },
-                desc: { en: "World-famous nightlife show, acrobatics and open bar.", es: "Espectáculo nocturno de fama mundial, acrobacias y barra libre." },
-                price: 80,
-                image: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?auto=format&fit=crop&w=600&q=80"
-            }
+        const tours = [
+            { id: 1, name: {en: "Saona Island VIP", es: "Isla Saona VIP"}, price: 85, img: "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500", desc: {en: "Catamaran, buffet, and natural pool.", es: "Catamarán, buffet y piscina natural."} },
+            { id: 2, name: {en: "Catalina Island", es: "Isla Catalina"}, price: 75, img: "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=500", desc: {en: "Crystal clear water and snorkeling.", es: "Agua cristalina y snorkel."} },
+            { id: 3, name: {en: "Santo Domingo Tour", es: "Tour Santo Domingo"}, price: 90, img: "https://images.unsplash.com/photo-1596423985558-a53e6c039985?w=500", desc: {en: "The first city of the New World.", es: "La primera ciudad del Nuevo Mundo."} },
+            { id: 4, name: {en: "Samana Explorer", es: "Samaná Explora"}, price: 125, img: "https://images.unsplash.com/photo-1589785233216-d39a3f2d0113?w=500", desc: {en: "Waterfalls and Bacardi Island.", es: "Cascadas e Isla Bacardí."} },
+            { id: 5, name: {en: "Los Haitises Park", es: "Parque Los Haitises"}, price: 95, img: "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=500", desc: {en: "Cave exploring and mangroves.", es: "Exploración de cuevas y manglares."} },
+            { id: 6, name: {en: "Jungle Zipline", es: "Zipline en la Selva"}, price: 65, img: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=500", desc: {en: "Fly through the tropical canopy.", es: "Vuela sobre el dosel tropical."} },
+            { id: 7, name: {en: "Horseback Riding", es: "Paseo a Caballo"}, price: 55, img: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=500", desc: {en: "Beach and trail adventure.", es: "Aventura en playa y senderos."} },
+            { id: 8, name: {en: "La Hacienda Park", es: "Parque La Hacienda"}, price: 99, img: "https://images.unsplash.com/photo-1533644026857-463e264585c4?w=500", desc: {en: "7 activities in one park.", es: "7 actividades en un solo parque."} },
+            { id: 9, name: {en: "Private Catamaran", es: "Catamarán Privado"}, price: 500, img: "https://images.unsplash.com/photo-1566418872583-04e38e19c3b0?w=500", desc: {en: "Luxury sailing for your group.", es: "Navegación de lujo para su grupo."} },
+            { id: 10, name: {en: "Speed Boat", es: "Lancha Rápida"}, price: 75, img: "https://images.unsplash.com/photo-1574347201732-f1262d6657c6?w=500", desc: {en: "Drive your own boat.", es: "Conduzca su propio bote."} },
+            { id: 11, name: {en: "Dolphin Swim", es: "Nado con Delfines"}, price: 115, img: "https://images.unsplash.com/photo-1570415309668-3e9a4f610332?w=500", desc: {en: "Interaction and swimming.", es: "Interacción y nado."} },
+            { id: 12, name: {en: "Scuba Doo", es: "Scuba Doo"}, price: 60, img: "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?w=500", desc: {en: "Underwater scooter fun.", es: "Diversión en moto submarina."} },
+            { id: 13, name: {en: "Party Boat", es: "Barco de Fiesta"}, price: 55, img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=500", desc: {en: "Drinks, music, and snorkeling.", es: "Bebidas, música y snorkel."} },
+            { id: 14, name: {en: "Buggy Adventure", es: "Aventura en Buggy"}, price: 70, img: "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=500", desc: {en: "Off-road mud and fun.", es: "Lodo y diversión todoterreno."} },
+            { id: 15, name: {en: "Deep Sea Fishing", es: "Pesca de Altura"}, price: 130, img: "https://images.unsplash.com/photo-1520114878144-6123749968dd?w=500", desc: {en: "Catch the big one.", es: "Pesca la pieza más grande."} },
+            { id: 16, name: {en: "Coco Bongo", es: "Coco Bongo"}, price: 80, img: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=500", desc: {en: "The best show in the Caribbean.", es: "El mejor show del Caribe."} }
         ];
 
-        /* --- 2. DICTIONARY --- */
-        const dictionary = {
+        let lang = 'en';
+
+        const i18n = {
             en: {
-                heroTitle: "Explore The Dominican Republic",
-                heroSubtitle: "The most exclusive tours & adventures await you.",
-                activitiesHeader: "Available Excursions",
-                btnBook: "Book Now",
-                checkoutTitle: "Secure Checkout",
-                labelDate: "Select Date",
-                labelCardDetails: "Payment Details",
-                labelName: "Cardholder Name",
-                labelCardNum: "Card Number",
-                labelExpiry: "Expiry (MM/YY)",
-                btnPay: "Pay & Book Now",
-                msgSuccess: "Booking Confirmed! Check your email."
+                title: "Experience Paradise", sub: "The most exclusive excursions in the Dominican Republic",
+                search: "Search adventures...", book: "Book Now", date: "Travel Date",
+                name: "Full Name", card: "Card Number", exp: "Expiry (MM/YY)", pay: "Book & Pay Now",
+                sTitle: "Payment Confirmed!", sBody: "Your tickets have been sent to your email."
             },
             es: {
-                heroTitle: "Explora la República Dominicana",
-                heroSubtitle: "Las excursiones y aventuras más exclusivas te esperan.",
-                activitiesHeader: "Excursiones Disponibles",
-                btnBook: "Reservar Ahora",
-                checkoutTitle: "Pago Seguro",
-                labelDate: "Seleccionar Fecha",
-                labelCardDetails: "Detalles de Pago",
-                labelName: "Nombre del Titular",
-                labelCardNum: "Número de Tarjeta",
-                labelExpiry: "Vencimiento (MM/AA)",
-                btnPay: "Pagar y Reservar",
-                msgSuccess: "¡Reserva Confirmada! Revise su correo."
+                title: "Vive el Paraíso", sub: "Las excursiones más exclusivas de República Dominicana",
+                search: "Buscar aventuras...", book: "Reservar Ahora", date: "Fecha del Viaje",
+                name: "Nombre Completo", card: "Número de Tarjeta", exp: "Vencimiento (MM/AA)", pay: "Reservar y Pagar",
+                sTitle: "¡Pago Confirmado!", sBody: "Sus boletos han sido enviados a su correo."
             }
         };
 
-        let currentLang = 'en';
-
-        /* --- 3. FUNCTIONS --- */
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            renderTours();
-            
-            // Set Date Picker Min to Today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('bookingDate').setAttribute('min', today);
-        });
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            
-            // Update Toggle UI
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${lang}`).classList.add('active');
-
-            // Update Text Elements
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if(dictionary[lang][key]) {
-                    el.innerText = dictionary[lang][key];
-                }
-            });
-
-            // Update Placeholder
-            const searchPlace = lang === 'en' ? 'Search activities...' : 'Buscar actividades...';
-            document.getElementById('searchInput').placeholder = searchPlace;
-
-            // Re-render Cards (to update internal card text)
+        function setLang(l) {
+            lang = l;
+            document.getElementById('en-btn').classList.toggle('active', l === 'en');
+            document.getElementById('es-btn').classList.toggle('active', l === 'es');
+            document.getElementById('hero-title').innerText = i18n[l].title;
+            document.getElementById('hero-sub').innerText = i18n[l].sub;
+            document.getElementById('searchInput').placeholder = i18n[l].search;
+            document.getElementById('lbl-date').innerText = i18n[l].date;
+            document.getElementById('lbl-name').innerText = i18n[l].name;
+            document.getElementById('lbl-card').innerText = i18n[l].card;
+            document.getElementById('lbl-exp').innerText = i18n[l].exp;
+            document.getElementById('btn-pay-now').innerText = i18n[l].pay;
+            document.getElementById('msg-success-title').innerText = i18n[l].sTitle;
+            document.getElementById('msg-success-body').innerText = i18n[l].sBody;
             renderTours();
         }
 
-        function renderTours() {
+        function renderTours(filter = '') {
             const grid = document.getElementById('toursGrid');
             grid.innerHTML = '';
-            
-            const term = document.getElementById('searchInput').value.toLowerCase();
-            const btnText = dictionary[currentLang].btnBook;
-
-            toursData.forEach(tour => {
-                const name = tour.name[currentLang];
-                const desc = tour.desc[currentLang];
-
-                // Simple Search Filter
-                if(name.toLowerCase().includes(term) || desc.toLowerCase().includes(term)) {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-image" style="background-image: url('${tour.image}')">
-                            <span class="price-badge">$${tour.price} USD</span>
+            tours.filter(t => t.name[lang].toLowerCase().includes(filter.toLowerCase())).forEach(t => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('${t.img}')">
+                            <div class="price-tag">$${t.price} USD</div>
                         </div>
-                        <div class="card-body">
-                            <h3 class="card-title">${name}</h3>
-                            <p class="card-desc">${desc}</p>
-                            <button class="btn-book" onclick="openModal(${tour.id})">
-                                <i class="fas fa-calendar-check"></i> ${btnText}
-                            </button>
+                        <div class="card-content">
+                            <h3 class="card-title">${t.name[lang]}</h3>
+                            <p class="card-text">${t.desc[lang]}</p>
+                            <button class="btn-book" onclick="openModal(${t.id})">${i18n[lang].book}</button>
                         </div>
-                    `;
-                    grid.appendChild(card);
-                }
+                    </div>
+                `;
             });
         }
 
-        /* --- 4. MODAL LOGIC --- */
-        let selectedTour = null;
+        function filterTours() {
+            renderTours(document.getElementById('searchInput').value);
+        }
 
         function openModal(id) {
-            selectedTour = toursData.find(t => t.id === id);
-            
-            // Fill Modal Info
-            document.getElementById('modalTourName').innerText = selectedTour.name[currentLang];
-            document.getElementById('modalTourPrice').innerText = `Total: $${selectedTour.price} USD`;
-            
-            // Reset Form State
-            document.getElementById('paymentForm').reset();
-            document.getElementById('successMsg').style.display = 'none';
-            document.getElementById('payBtn').style.display = 'block';
-            
-            // Show
+            const t = tours.find(x => x.id === id);
+            document.getElementById('modal-tour-name').innerText = t.name[lang];
+            document.getElementById('modal-tour-price').innerText = `$${t.price}.00 USD`;
             document.getElementById('paymentModal').style.display = 'flex';
+            document.getElementById('formContainer').style.display = 'block';
+            document.getElementById('successMsg').style.display = 'none';
         }
 
         function closeModal() {
@@ -652,35 +335,19 @@
 
         function processPayment(e) {
             e.preventDefault();
-            
-            const btn = document.getElementById('payBtn');
-            const originalText = btn.innerHTML;
-            
-            // Loading State
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            btn.disabled = true;
-
-            // Simulate Network Request
+            const btn = document.getElementById('btn-pay-now');
+            btn.innerText = "...";
             setTimeout(() => {
-                btn.style.display = 'none';
+                document.getElementById('formContainer').style.display = 'none';
                 document.getElementById('successMsg').style.display = 'block';
-                
-                // Reset Button
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                
-                // Close Modal after success
-                setTimeout(closeModal, 2500);
-            }, 2000);
+                setTimeout(closeModal, 3000);
+            }, 1500);
         }
 
-        // Close modal if clicking outside content
-        window.onclick = function(event) {
-            const modal = document.getElementById('paymentModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
+        window.onclick = (e) => { if(e.target == document.getElementById('paymentModal')) closeModal(); }
+        
+        // Initial load
+        setLang('en');
     </script>
 </body>
 </html>
