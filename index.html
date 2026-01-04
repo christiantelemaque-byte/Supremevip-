@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supreme VIP JCZ Tours | Dominican Republic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00897b;
+            --primary-dark: #00695c;
+            --accent: #ffb300;
+            --bg: #f8f9fa;
+            --text: #2c3e50;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+
+        /* Navigation */
+        header {
+            background: var(--white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+        
+        .nav-btns { display: flex; gap: 10px; }
+        .lang-btn {
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .lang-btn.active { background: var(--primary); color: var(--white); }
+
+        /* Hero Section */
+        .hero {
+            height: 50vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+
+        /* Search Area */
+        .search-section {
+            background: var(--primary);
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: none;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            outline: none;
+        }
+
+        /* Tours Grid */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Tour Card */
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover { transform: translateY(-10px); }
+        .card-img { height: 200px; background-size: cover; background-position: center; position: relative; }
+        .price-tag {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
+        .card-text { font-size: 0.9rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        
+        /* Rating Stars */
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .stars {
+            color: #ffb300;
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+        .rating-text {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .btn-review {
+            background: #f0f0f0;
+            color: var(--text);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+        .btn-review:hover { background: #e0e0e0; }
+        
+        .btn-book {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            margin-top: auto;
+        }
+        .btn-book:hover { background: var(--primary-dark); }
+
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 95%;
+            max-width: 500px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #666; }
+        .close:hover { color: #000; }
+        
+        .checkout-header { border-bottom: 1px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+        .cc-row { display: flex; gap: 10px; }
+        
+        .btn-pay {
+            background: var(--accent);
+            color: #000;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .success-overlay { display: none; text-align: center; padding: 20px; }
+        .success-overlay i { font-size: 50px; color: #4caf50; margin-bottom: 15px; }
+        
+        /* Review Modal */
+        .reviews-container { margin-top: 20px; }
+        .review-item { 
+            padding: 15px; 
+            border-bottom: 1px solid #eee; 
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .review-header { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 8px; 
+            align-items: center;
+        }
+        .review-name { font-weight: bold; color: var(--primary-dark); }
+        .review-date { font-size: 0.8rem; color: #999; }
+        .review-text { font-size: 0.9rem; line-height: 1.5; }
+        
+        .review-form { 
+            background: #f5f5f5; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-top: 20px;
+        }
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            margin: 10px 0;
+        }
+        .star-rating input { display: none; }
+        .star-rating label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ddd;
+            margin-right: 5px;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffb300;
+        }
+        .review-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            margin: 10px 0;
+            font-family: inherit;
+        }
+        .btn-submit-review {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-submit-review:hover { background: var(--primary-dark); }
+        
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .no-reviews { 
+            text-align: center; 
+            padding: 20px; 
+            color: #999; 
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            header { flex-direction: column; gap: 10px; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .modal-content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Supreme<span>VIP</span> JCZ</div>
+        <div class="nav-btns">
+            <button class="lang-btn active" id="en-btn" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="es-btn" onclick="setLang('es')">Español</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1 id="hero-title">Experience Paradise</h1>
+        <p id="hero-sub">The most exclusive excursions in the Dominican Republic</p>
+    </section>
+
+    <div class="search-section">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search adventures..." onkeyup="filterTours()">
+    </div>
+
+    <div class="container">
+        <div class="grid" id="toursGrid"></div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content" id="modalMain">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-tabs">
+                <button class="tab-btn active" onclick="switchTab('booking')" id="tabBooking">Booking</button>
+                <button class="tab-btn" onclick="switchTab('reviews')" id="tabReviews">Reviews</button>
+            </div>
+            
+            <div id="bookingTab" class="tab-content active">
+                <div class="checkout-header">
+                    <h2 id="modal-tour-name">Tour Name</h2>
+                    <p id="modal-tour-price" style="color: var(--primary); font-weight: bold;"></p>
+                </div>
+                <form onsubmit="processPayment(event)">
+                    <div class="form-group">
+                        <label id="lbl-date">Travel Date</label>
+                        <input type="date" class="form-control" id="travelDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="lbl-name">Full Name</label>
+                        <input type="text" class="form-control" placeholder="John Doe" id="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="lbl-card">Card Number</label>
+                        <input type="text" class="form-control" placeholder="1234 5678 9101 1121" maxlength="19" id="cardNumber" required>
+                    </div>
+                    <div class="cc-row">
+                        <div class="form-group" style="flex:2">
+                            <label id="lbl-exp">Expiry (MM/YY)</label>
+                            <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" id="cardExpiry" required>
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label>CVV</label>
+                            <input type="text" class="form-control" placeholder="123" maxlength="3" id="cardCVV" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-pay" id="btn-pay-now">Book & Pay Now</button>
+                </form>
+                <div id="successMsg" class="success-overlay">
+                    <i class="fas fa-check-circle"></i>
+                    <h2 id="msg-success-title">Payment Confirmed!</h2>
+                    <p id="msg-success-body">Your tickets have been sent to your email.</p>
+                </div>
+            </div>
+            
+            <div id="reviewsTab" class="tab-content">
+                <div class="checkout-header">
+                    <h2>Reviews for <span id="review-tour-name">Tour Name</span></h2>
+                    <div class="rating">
+                        <div class="stars" id="modal-rating-stars"></div>
+                        <span class="rating-text" id="modal-rating-text">(0 reviews)</span>
+                    </div>
+                </div>
+                
+                <div class="reviews-container" id="reviewsList">
+                    <div class="no-reviews">No reviews yet. Be the first to review!</div>
+                </div>
+                
+                <div class="review-form">
+                    <h3>Leave a Review</h3>
+                    <form onsubmit="submitReview(event)">
+                        <div class="form-group">
+                            <label>Your Name</label>
+                            <input type="text" class="form-control" id="reviewerName" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Rating</label>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5">
+                                <label for="star5">★</label>
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4">★</label>
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3">★</label>
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" required>
+                                <label for="star1">★</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Your Review</label>
+                            <textarea class="review-textarea" id="reviewText" placeholder="Share your experience..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit-review">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tours = [
+            { id: 1, name: {en: "Saona Island VIP", es: "Isla Saona VIP"}, price: 85, img: "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500", desc: {en: "Catamaran, buffet, and natural pool.", es: "Catamarán, buffet y piscina natural."} },
+            { id: 2, name: {en: "Catalina Island", es: "Isla Catalina"}, price: 75, img: "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=500", desc: {en: "Crystal clear water and snorkeling.", es: "Agua cristalina y snorkel."} },
+            { id: 3, name: {en: "Santo Domingo Tour", es: "Tour Santo Domingo"}, price: 90, img: "https://images.unsplash.com/photo-1596423985558-a53e6c039985?w=500", desc: {en: "The first city of the New World.", es: "La primera ciudad del Nuevo Mundo."} },
+            { id: 4, name: {en: "Samana Explorer", es: "Samaná Explora"}, price: 125, img: "https://images.unsplash.com/photo-1589785233216-d39a3f2d0113?w=500", desc: {en: "Waterfalls and Bacardi Island.", es: "Cascadas e Isla Bacardí."} },
+            { id: 5, name: {en: "Los Haitises Park", es: "Parque Los Haitises"}, price: 95, img: "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=500", desc: {en: "Cave exploring and mangroves.", es: "Exploración de cuevas y manglares."} },
+            { id: 6, name: {en: "Jungle Zipline", es: "Zipline en la Selva"}, price: 65, img: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=500", desc: {en: "Fly through the tropical canopy.", es: "Vuela sobre el dosel tropical."} },
+            { id: 7, name: {en: "Horseback Riding", es: "Paseo a Caballo"}, price: 55, img: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=500", desc: {en: "Beach and trail adventure.", es: "Aventura en playa y senderos."} },
+            { id: 8, name: {en: "La Hacienda Park", es: "Parque La Hacienda"}, price: 99, img: "https://images.unsplash.com/photo-1533644026857-463e264585c4?w=500", desc: {en: "7 activities in one park.", es: "7 actividades en un solo parque."} },
+            { id: 9, name: {en: "Private Catamaran", es: "Catamarán Privado"}, price: 500, img: "https://images.unsplash.com/photo-1566418872583-04e38e19c3b0?w=500", desc: {en: "Luxury sailing for your group.", es: "Navegación de lujo para su grupo."} },
+            { id: 10, name: {en: "Speed Boat", es: "Lancha Rápida"}, price: 75, img: "https://images.unsplash.com/photo-1574347201732-f1262d6657c6?w=500", desc: {en: "Drive your own boat.", es: "Conduzca su propio bote."} },
+            { id: 11, name: {en: "Dolphin Swim", es: "Nado con Delfines"}, price: 115, img: "https://images.unsplash.com/photo-1570415309668-3e9a4f610332?w=500", desc: {en: "Interaction and swimming.", es: "Interacción y nado."} },
+            { id: 12, name: {en: "Scuba Doo", es: "Scuba Doo"}, price: 60, img: "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?w=500", desc: {en: "Underwater scooter fun.", es: "Diversión en moto submarina."} },
+            { id: 13, name: {en: "Party Boat", es: "Barco de Fiesta"}, price: 55, img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=500", desc: {en: "Drinks, music, and snorkeling.", es: "Bebidas, música y snorkel."} },
+            { id: 14, name: {en: "Buggy Adventure", es: "Aventura en Buggy"}, price: 70, img: "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=500", desc: {en: "Off-road mud and fun.", es: "Lodo y diversión todoterreno."} },
+            { id: 15, name: {en: "Deep Sea Fishing", es: "Pesca de Altura"}, price: 130, img: "https://images.unsplash.com/photo-1520114878144-6123749968dd?w=500", desc: {en: "Catch the big one.", es: "Pesca la pieza más grande."} },
+            { id: 16, name: {en: "Coco Bongo", es: "Coco Bongo"}, price: 80, img: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=500", desc: {en: "The best show in the Caribbean.", es: "El mejor show del Caribe."} },
+            // New 7 excursions
+            { id: 17, name: {en: "Zip-line Adventure", es: "Aventura en Tirolesa"}, price: 45, img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500", desc: {en: "Exciting zip-line through the jungle.", es: "Emocionante tirolesa por la jungla."} },
+            { id: 18, name: {en: "Party Boat Extreme", es: "Barco de Fiesta Extremo"}, price: 60, img: "https://images.unsplash.com/photo-1511994717241-8e4e484dfa8c?w=500", desc: {en: "Party boat with music and open bar.", es: "Barco de fiesta con música y barra libre."} },
+            { id: 19, name: {en: "Parasailing Paradise", es: "Parapente en el Paraíso"}, price: 75, img: "https://images.unsplash.com/photo-1575058752200-a9d6fa0a09a1?w=500", desc: {en: "Fly above the ocean with parasailing.", es: "Vuela sobre el océano con parapente."} },
+            { id: 20, name: {en: "Boogies Beach Ride", es: "Paseo en Boogies en la Playa"}, price: 50, img: "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=500", desc: {en: "Fun boogie ride along the beach.", es: "Divertido paseo en boogies por la playa."} },
+            { id: 21, name: {en: "Safari Supreme", es: "Safari Supremo"}, price: 120, img: "https://images.unsplash.com/photo-1533577116858-5d894d8f9b9d?w=500", desc: {en: "Luxury safari through natural parks.", es: "Safari de lujo por parques naturales."} },
+            { id: 22, name: {en: "Glass Boat Tour", es: "Tour en Barco de Cristal"}, price: 40, img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500", desc: {en: "See marine life through glass bottom.", es: "Vea la vida marina a través del fondo de cristal."} },
+            { id: 23, name: {en: "Scape Park Adventure", es: "Aventura en Scape Park"}, price: 95, img: "https://images.unsplash.com/photo-1548586196-aa5803b5bfc8?w=500", desc: {en: "Adventure park with multiple attractions.", es: "Parque de aventuras con múltiples atracciones."} }
+        ];
+
+        let lang = 'en';
+        let currentTourId = null;
+        let reviews = JSON.parse(localStorage.getItem('supremeVipReviews')) || {};
+
+        const i18n = {
+            en: {
+                title: "Experience Paradise", sub: "The most exclusive excursions in the Dominican Republic",
+                search: "Search adventures...", book: "Book Now", date: "Travel Date",
+                name: "Full Name", card: "Card Number", exp: "Expiry (MM/YY)", pay: "Book & Pay Now",
+                sTitle: "Payment Confirmed!", sBody: "Your tickets have been sent to your email.",
+                reviews: "Reviews", leaveReview: "Leave Review", noReviews: "No reviews yet",
+                rating: "Rating", submitReview: "Submit Review", yourName: "Your Name",
+                yourReview: "Your Review", booking: "Booking"
+            },
+            es: {
+                title: "Vive el Paraíso", sub: "Las excursiones más exclusivas de República Dominicana",
+                search: "Buscar aventuras...", book: "Reservar Ahora", date: "Fecha del Viaje",
+                name: "Nombre Completo", card: "Número de Tarjeta", exp: "Vencimiento (MM/AA)", pay: "Reservar y Pagar",
+                sTitle: "¡Pago Confirmado!", sBody: "Sus boletos han sido enviados a su correo.",
+                reviews: "Reseñas", leaveReview: "Dejar Reseña", noReviews: "Aún no hay reseñas",
+                rating: "Calificación", submitReview: "Enviar Reseña", yourName: "Tu Nombre",
+                yourReview: "Tu Reseña", booking: "Reserva"
+            }
+        };
+
+        function setLang(l) {
+            lang = l;
+            document.getElementById('en-btn').classList.toggle('active', l === 'en');
+            document.getElementById('es-btn').classList.toggle('active', l === 'es');
+            document.getElementById('hero-title').innerText = i18n[l].title;
+            document.getElementById('hero-sub').innerText = i18n[l].sub;
+            document.getElementById('searchInput').placeholder = i18n[l].search;
+            document.getElementById('lbl-date').innerText = i18n[l].date;
+            document.getElementById('lbl-name').innerText = i18n[l].name;
+            document.getElementById('lbl-card').innerText = i18n[l].card;
+            document.getElementById('lbl-exp').innerText = i18n[l].exp;
+            document.getElementById('btn-pay-now').innerText = i18n[l].pay;
+            document.getElementById('msg-success-title').innerText = i18n[l].sTitle;
+            document.getElementById('msg-success-body').innerText = i18n[l].sBody;
+            document.getElementById('tabBooking').innerText = i18n[l].booking;
+            document.getElementById('tabReviews').innerText = i18n[l].reviews;
+            renderTours();
+        }
+
+        function getTourReviews(tourId) {
+            return reviews[tourId] || [];
+        }
+
+        function calculateAverageRating(tourId) {
+            const tourReviews = getTourReviews(tourId);
+            if (tourReviews.length === 0) return 0;
+            const sum = tourReviews.reduce((total, review) => total + review.rating, 0);
+            return (sum / tourReviews.length).toFixed(1);
+        }
+
+        function renderStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    stars += '★';
+                } else if (i === fullStars && hasHalfStar) {
+                    stars += '½';
+                } else {
+                    stars += '☆';
+                }
+            }
+            return stars;
+        }
+
+        function renderTours(filter = '') {
+            const grid = document.getElementById('toursGrid');
+            grid.innerHTML = '';
+            
+            tours.filter(t => t.name[lang].toLowerCase().includes(filter.toLowerCase())).forEach(t => {
+                const tourReviews = getTourReviews(t.id);
+                const avgRating = calculateAverageRating(t.id);
+                const reviewCount = tourReviews.length;
+                
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('${t.img}')">
+                            <div class="price-tag">$${t.price} USD</div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">${t.name[lang]}</h3>
+                            <p class="card-text">${t.desc[lang]}</p>
+                            
+                            <div class="rating">
+                                <div class="stars">${renderStars(avgRating)}</div>
+                                <span class="rating-text">${avgRating > 0 ? avgRating : 'No'} ${reviewCount === 1 ? 'review' : 'reviews'}</span>
+                            </div>
+                            
+                            <button class="btn-review" onclick="openReviewTab(${t.id})">
+                                <i class="fas fa-star"></i> ${i18n[lang].leaveReview}
+                            </button>
+                            
+                            <button class="btn-book" onclick="openModal(${t.id})">${i18n[lang].book}</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterTours() {
+            renderTours(document.getElementById('searchInput').value);
+        }
+
+        function openModal(id) {
+            currentTourId = id;
+            const t = tours.find(x => x.id === id);
+            document.getElementById('modal-tour-name').innerText = t.name[lang];
+            document.getElementById('modal-tour-price').innerText = `$${t.price}.00 USD`;
+            document.getElementById('review-tour-name').innerText = t.name[lang];
+            document.getElementById('paymentModal').style.display = 'flex';
+            document.getElementById('formContainer').style.display = 'block';
+            document.getElementById('successMsg').style.display = 'none';
+            switchTab('booking');
+            updateReviewDisplay();
+        }
+
+        function openReviewTab(tourId) {
+            openModal(tourId);
+            switchTab('reviews');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'booking') {
+                document.getElementById('tabBooking').classList.add('active');
+                document.getElementById('bookingTab').classList.add('active');
+            } else {
+                document.getElementById('tabReviews').classList.add('active');
+                document.getElementById('reviewsTab').classList.add('active');
+                updateReviewDisplay();
+            }
+        }
+
+        function updateReviewDisplay() {
+            if (!currentTourId) return;
+            
+            const tourReviews = getTourReviews(currentTourId);
+            const avgRating = calculateAverageRating(currentTourId);
+            const reviewCount = tourReviews.length;
+            
+            document.getElementById('modal-rating-stars').innerHTML = renderStars(avgRating);
+            document.getElementById('modal-rating-text').innerText = `(${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})`;
+            
+            const reviewsList = document.getElementById('reviewsList');
+            reviewsList.innerHTML = '';
+            
+            if (tourReviews.length === 0) {
+                reviewsList.innerHTML = `<div class="no-reviews">${i18n[lang].noReviews}</div>`;
+            } else {
+                tourReviews.forEach(review => {
+                    const reviewDate = new Date(review.date).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US');
+                    reviewsList.innerHTML += `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <span class="review-name">${review.name}</span>
+                                <span class="review-date">${reviewDate}</span>
+                            </div>
+                            <div class="stars">${renderStars(review.rating)}</div>
+                            <p class="review-text">${review.text}</p>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function submitReview(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('reviewerName').value;
+            const rating = document.querySelector('input[name="rating"]:checked');
+            const text = document.getElementById('reviewText').value;
+            
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+            
+            if (!reviews[currentTourId]) {
+                reviews[currentTourId] = [];
+            }
+            
+            reviews[currentTourId].push({
+                name: name,
+                rating: parseInt(rating.value),
+                text: text,
+                date: new Date().toISOString()
+            });
+            
+            localStorage.setItem('supremeVipReviews', JSON.stringify(reviews));
+            
+            document.getElementById('reviewerName').value = '';
+            document.querySelectorAll('input[name="rating"]').forEach(radio => radio.checked = false);
+            document.getElementById('reviewText').value = '';
+            
+            updateReviewDisplay();
+            renderTours();
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            currentTourId = null;
+        }
+
+        function processPayment(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-pay-now');
+            btn.innerText = "...";
+            
+            setTimeout(() => {
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('successMsg').style.display = 'block';
+                setTimeout(closeModal, 3000);
+            }, 1500);
+        }
+
+        window.onclick = (e) => { 
+            if(e.target == document.getElementById('paymentModal')) closeModal(); 
+        }
+        
+        // Initialize date input with tomorrow's date
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('travelDate').min = tomorrow.toISOString().split('T')[0];
+        
+        // Initial load
+        setLang('en');
+    </script>
+</body>
+</html>
