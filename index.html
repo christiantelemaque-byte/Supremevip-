@@ -8,7 +8,7 @@
     <!-- Supabase JavaScript Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* (your existing styles - unchanged) */
+        /* (your existing styles - same as before) */
         :root {
             --primary: #00897b;
             --primary-dark: #00695c;
@@ -578,7 +578,7 @@
                 console.error('Failed to initialize Supabase:', e);
             }
 
-            // --- TOURS DATA ---
+            // --- TOURS DATA (all 23 tours) ---
             const tours = [
                 { 
                     id: 1, 
@@ -1395,7 +1395,7 @@
                 return stars;
             }
 
-            // --- SUPABASE FUNCTIONS (safe) ---
+            // --- SUPABASE FUNCTIONS (with detailed error logging) ---
             async function loadReviewsForTour(tourId) {
                 if (!supabase) return [];
                 try {
@@ -1405,16 +1405,22 @@
                         .eq('tour_id', tourId)
                         .order('created_at', { ascending: false })
                         .limit(10);
-                    if (error) throw error;
+                    if (error) {
+                        console.error('Error loading reviews:', error);
+                        return [];
+                    }
                     return data || [];
                 } catch (error) {
-                    console.error('Error loading reviews:', error);
+                    console.error('Exception loading reviews:', error);
                     return [];
                 }
             }
 
             async function saveReviewToSupabase(reviewData) {
-                if (!supabase) return { success: false, error: 'Database offline' };
+                if (!supabase) {
+                    console.error('Supabase not initialized');
+                    return { success: false, error: 'Database not available' };
+                }
                 try {
                     const { data, error } = await supabase
                         .from('reviews')
@@ -1427,11 +1433,14 @@
                             }
                         ])
                         .select();
-                    if (error) throw error;
+                    if (error) {
+                        console.error('Supabase insert error:', error);
+                        return { success: false, error: error.message };
+                    }
                     return { success: true, review: data[0] };
-                } catch (error) {
-                    console.error('Error saving review:', error);
-                    return { success: false, error };
+                } catch (err) {
+                    console.error('Exception during insert:', err);
+                    return { success: false, error: err.message };
                 }
             }
 
@@ -1501,7 +1510,7 @@
                 });
                 grid.innerHTML = toursHTML;
 
-                // Load reviews asynchronously
+                // Asynchronously load reviews for each tour and update stars
                 filteredTours.forEach(async (tour) => {
                     const reviews = await loadReviewsForTour(tour.id);
                     const count = reviews.length;
@@ -1698,7 +1707,8 @@
                         btn.disabled = false;
                     }, 2000);
                 } else {
-                    alert('Error submitting review. Please try again.');
+                    // Show the actual error message from Supabase
+                    alert('Error submitting review: ' + (result.error || 'Unknown error'));
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 }
@@ -1748,4 +1758,4 @@
         })();
     </script>
 </body>
-        </html>
+    </html>
