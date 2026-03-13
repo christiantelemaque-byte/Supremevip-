@@ -8,6 +8,7 @@
     <!-- Supabase JavaScript Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* (Your existing styles - unchanged) */
         :root {
             --primary: #00897b;
             --primary-dark: #00695c;
@@ -21,7 +22,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
 
-        /* Navigation */
         header {
             background: var(--white);
             padding: 1rem 2rem;
@@ -49,7 +49,6 @@
         }
         .lang-btn.active { background: var(--primary); color: var(--white); }
 
-        /* Hero Section */
         .hero {
             height: 50vh;
             background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=1600&q=80');
@@ -65,7 +64,6 @@
         }
         .hero h1 { font-size: 3.5rem; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
 
-        /* Search Area */
         .search-section {
             background: var(--primary);
             padding: 2rem;
@@ -83,7 +81,6 @@
             outline: none;
         }
 
-        /* Tours Grid */
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         .grid {
             display: grid;
@@ -91,7 +88,6 @@
             gap: 30px;
         }
 
-        /* Tour Card */
         .card {
             background: var(--white);
             border-radius: 15px;
@@ -118,7 +114,6 @@
         .card-title { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
         .card-text { font-size: 0.9rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
         
-        /* Rating Stars */
         .rating {
             display: flex;
             align-items: center;
@@ -164,7 +159,6 @@
         }
         .btn-book:hover { background: var(--primary-dark); }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -211,7 +205,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Details Tab */
         .tour-details {
             display: flex;
             flex-direction: column;
@@ -273,7 +266,6 @@
             margin-right: 10px;
         }
         
-        /* Booking Tab */
         .checkout-header {
             border-bottom: 1px solid #eee;
             margin-bottom: 20px;
@@ -299,7 +291,6 @@
         .success-overlay { display: none; text-align: center; padding: 20px; }
         .success-overlay i { font-size: 50px; color: #4caf50; margin-bottom: 15px; }
         
-        /* Reviews Tab */
         .reviews-container { margin-top: 20px; }
         .review-item { 
             padding: 15px; 
@@ -570,11 +561,18 @@
     </div>
 
     <script>
-        // --- SUPABASE CONFIGURATION ---
-        // REPLACE WITH YOUR ACTUAL SUPABASE CREDENTIALS
+        // --- SUPABASE CONFIGURATION (with error handling) ---
         const SUPABASE_URL = 'https://iitvetxbqdtkxiyowbp.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_lmp0WexjNauoHELEFo9H8g_RFbOKuRU';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let supabase = null;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized');
+        } catch (e) {
+            console.error('Failed to initialize Supabase:', e);
+            // Continue without database features
+        }
 
         // --- TOURS DATA (unchanged) ---
         const tours = [
@@ -1393,8 +1391,12 @@
             return stars;
         }
 
-        // --- SUPABASE FUNCTIONS ---
+        // --- SUPABASE FUNCTIONS (safe: check if supabase exists) ---
         async function loadReviewsForTour(tourId) {
+            if (!supabase) {
+                console.warn('Supabase not initialized, returning empty reviews');
+                return [];
+            }
             try {
                 const { data, error } = await supabase
                     .from('reviews')
@@ -1411,6 +1413,10 @@
         }
 
         async function saveReviewToSupabase(reviewData) {
+            if (!supabase) {
+                console.warn('Supabase not initialized, cannot save review');
+                return { success: false, error: 'Database offline' };
+            }
             try {
                 const { data, error } = await supabase
                     .from('reviews')
@@ -1746,4 +1752,4 @@
         });
     </script>
 </body>
-    </html>
+                </html>
