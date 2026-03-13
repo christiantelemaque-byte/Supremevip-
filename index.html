@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supreme VIP JCZ Tours | Dominican Republic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JavaScript Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --primary: #00897b;
@@ -367,38 +369,6 @@
             color: #999; 
             font-style: italic;
         }
-        
-        /* Loading States */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(0,0,0,.1);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .db-status {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            z-index: 100;
-        }
-        .db-status.online { background: #4caf50; }
-        .db-status.offline { background: #f44336; }
 
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
@@ -407,7 +377,6 @@
             .modal-content { padding: 20px; }
             .detail-gallery { grid-template-columns: repeat(2, 1fr); }
             .card-buttons { flex-direction: column; }
-            .db-status { bottom: 10px; right: 10px; left: 10px; }
         }
     </style>
 </head>
@@ -600,23 +569,14 @@
         </div>
     </div>
 
-    <!-- Database Status Indicator -->
-    <div class="db-status online" id="dbStatus">
-        <i class="fas fa-database"></i>
-        <span>Database Connected</span>
-    </div>
-
     <script>
-        // REAL DATABASE CONFIGURATION
-        // Using JSONbin.io - Free online JSON storage with API
-        // Create your own free bin at: https://jsonbin.io/
-        const DATABASE_CONFIG = {
-            BIN_ID: '66b4a6c4ad19ca34f89639cd', // This is a public read-only demo bin
-            API_KEY: '$2a$10$UQ8Vk7oM7r1XQ6t2Y8KJLeKkZ8sH9L2qF8gT3hV7bC5dE6fG9hJkLm', // Public read-only key
-            API_URL: 'https://api.jsonbin.io/v3/b/66b4a6c4ad19ca34f89639cd'
-        };
+        // --- SUPABASE CONFIGURATION ---
+        // REPLACE WITH YOUR ACTUAL SUPABASE CREDENTIALS
+        const SUPABASE_URL = 'https://iitvetxbqdtkxiyowbp.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_lmp0WexjNauoHELEFo9H8g_RFbOKuRU';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // TOURS DATA - Hardcoded for immediate loading
+        // --- TOURS DATA (unchanged) ---
         const tours = [
             { 
                 id: 1, 
@@ -1390,11 +1350,9 @@
             }
         ];
 
-        // Global variables
+        // --- GLOBAL VARIABLES ---
         let lang = 'en';
         let currentTourId = null;
-        let allReviews = {}; // Cache for reviews
-        let isOnline = true;
 
         const i18n = {
             en: {
@@ -1425,7 +1383,55 @@
             }
         };
 
-        // Set language
+        // --- HELPER FUNCTIONS ---
+        function renderStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            for (let i = 0; i < 5; i++) {
+                stars += i < fullStars ? '★' : '☆';
+            }
+            return stars;
+        }
+
+        // --- SUPABASE FUNCTIONS ---
+        async function loadReviewsForTour(tourId) {
+            try {
+                const { data, error } = await supabase
+                    .from('reviews')
+                    .select('*')
+                    .eq('tour_id', tourId)
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+                if (error) throw error;
+                return data || [];
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                return [];
+            }
+        }
+
+        async function saveReviewToSupabase(reviewData) {
+            try {
+                const { data, error } = await supabase
+                    .from('reviews')
+                    .insert([
+                        {
+                            tour_id: reviewData.tourId,
+                            user_name: reviewData.name,
+                            rating: reviewData.rating,
+                            review_text: reviewData.text
+                        }
+                    ])
+                    .select();
+                if (error) throw error;
+                return { success: true, review: data[0] };
+            } catch (error) {
+                console.error('Error saving review:', error);
+                return { success: false, error };
+            }
+        }
+
+        // --- LANGUAGE ---
         function setLang(l) {
             lang = l;
             document.getElementById('en-btn').classList.toggle('active', l === 'en');
@@ -1455,42 +1461,17 @@
             document.getElementById('lbl-pickup').innerText = i18n[l].pickup;
             document.getElementById('lbl-included').innerText = i18n[l].included;
             document.getElementById('lbl-to-bring').innerText = i18n[l].bring;
-            
             renderTours();
         }
 
-        // Render stars
-        function renderStars(rating) {
-            let stars = '';
-            const fullStars = Math.floor(rating);
-            
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    stars += '★';
-                } else {
-                    stars += '☆';
-                }
-            }
-            return stars;
-        }
-
-        // IMMEDIATE LOADING - No database calls during initial render
-        function renderTours(filter = '') {
+        // --- RENDER TOURS (IMMEDIATE) ---
+        async function renderTours(filter = '') {
             const grid = document.getElementById('toursGrid');
-            
-            // Filter tours
-            let filteredTours = tours.filter(t => t.name[lang].toLowerCase().includes(filter.toLowerCase()));
-            
-            // Build HTML immediately - no async calls
+            const filteredTours = tours.filter(t => t.name[lang].toLowerCase().includes(filter.toLowerCase()));
+
+            // Immediate HTML with placeholders
             let toursHTML = '';
-            
             filteredTours.forEach(tour => {
-                // Get cached rating or show placeholder
-                const tourReviews = allReviews[tour.id] || [];
-                const reviewCount = tourReviews.length;
-                const avgRating = reviewCount > 0 ? 
-                    (tourReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1) : 0;
-                
                 toursHTML += `
                     <div class="card" onclick="openTourDetails(${tour.id})">
                         <div class="card-img" style="background-image: url('${tour.img}')">
@@ -1499,12 +1480,10 @@
                         <div class="card-content">
                             <h3 class="card-title">${tour.name[lang]}</h3>
                             <p class="card-text">${tour.desc[lang]}</p>
-                            
                             <div class="rating">
-                                <div class="stars">${renderStars(avgRating)}</div>
-                                <span class="rating-text">${avgRating > 0 ? avgRating : 'No'} ${reviewCount === 1 ? 'review' : 'reviews'}</span>
+                                <div class="stars" id="rating-stars-${tour.id}">☆☆☆☆☆</div>
+                                <span class="rating-text" id="rating-text-${tour.id}">Loading...</span>
                             </div>
-                            
                             <div class="card-buttons">
                                 <button class="btn-review" onclick="event.stopPropagation(); openTourReviews(${tour.id})">
                                     <i class="fas fa-star"></i> ${i18n[lang].leaveReview}
@@ -1517,152 +1496,32 @@
                     </div>
                 `;
             });
-            
             grid.innerHTML = toursHTML;
-        }
 
-        // Load reviews from JSONbin.io database
-        async function loadReviewsFromDatabase() {
-            try {
-                const response = await fetch(DATABASE_CONFIG.API_URL, {
-                    method: 'GET',
-                    headers: {
-                        'X-Master-Key': DATABASE_CONFIG.API_KEY,
-                        'X-Bin-Meta': 'false'
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    allReviews = data.reviews || {};
-                    updateDatabaseStatus(true);
-                    
-                    // Update tour ratings after loading
-                    updateAllTourRatings();
-                    
-                    return allReviews;
-                } else {
-                    throw new Error('Failed to load reviews');
-                }
-            } catch (error) {
-                console.error('Error loading reviews:', error);
-                updateDatabaseStatus(false);
-                
-                // Try to load from localStorage as fallback
-                const localReviews = localStorage.getItem('supremeVipReviews');
-                if (localReviews) {
-                    allReviews = JSON.parse(localReviews);
-                }
-                
-                return allReviews;
-            }
-        }
-
-        // Save review to JSONbin.io database
-        async function saveReviewToDatabase(review) {
-            try {
-                // Add review to local cache first
-                if (!allReviews[review.tourId]) {
-                    allReviews[review.tourId] = [];
-                }
-                
-                // Generate unique ID and timestamp
-                review.id = Date.now();
-                review.createdAt = new Date().toISOString();
-                
-                // Add to local cache (limit to 10 most recent)
-                allReviews[review.tourId].unshift(review);
-                if (allReviews[review.tourId].length > 10) {
-                    allReviews[review.tourId] = allReviews[review.tourId].slice(0, 10);
-                }
-                
-                // Save to localStorage as backup
-                localStorage.setItem('supremeVipReviews', JSON.stringify(allReviews));
-                
-                // Try to save to online database
-                if (isOnline) {
-                    const dataToSave = { reviews: allReviews };
-                    
-                    const response = await fetch(DATABASE_CONFIG.API_URL, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Master-Key': DATABASE_CONFIG.API_KEY
-                        },
-                        body: JSON.stringify(dataToSave)
-                    });
-                    
-                    if (response.ok) {
-                        console.log('Review saved to database successfully');
-                        return { success: true, review: review };
-                    } else {
-                        throw new Error('Failed to save to database');
-                    }
-                } else {
-                    // Offline - saved to localStorage only
-                    return { success: true, review: review, offline: true };
-                }
-            } catch (error) {
-                console.error('Error saving review:', error);
-                updateDatabaseStatus(false);
-                
-                // Still return success for local storage
-                return { success: true, review: review, offline: true };
-            }
-        }
-
-        // Update all tour ratings after loading reviews
-        function updateAllTourRatings() {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                const titleElement = card.querySelector('.card-title');
-                if (titleElement) {
-                    const tourName = titleElement.textContent;
-                    const tour = tours.find(t => t.name[lang] === tourName);
-                    if (tour) {
-                        const tourReviews = allReviews[tour.id] || [];
-                        const reviewCount = tourReviews.length;
-                        const avgRating = reviewCount > 0 ? 
-                            (tourReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1) : 0;
-                        
-                        const starsElement = card.querySelector('.stars');
-                        const ratingTextElement = card.querySelector('.rating-text');
-                        
-                        if (starsElement) starsElement.textContent = renderStars(avgRating);
-                        if (ratingTextElement) ratingTextElement.textContent = 
-                            `${avgRating > 0 ? avgRating : 'No'} ${reviewCount === 1 ? 'review' : 'reviews'}`;
-                    }
-                }
+            // Asynchronously load reviews for each tour and update stars
+            filteredTours.forEach(async (tour) => {
+                const reviews = await loadReviewsForTour(tour.id);
+                const count = reviews.length;
+                const avg = count ? (reviews.reduce((sum, r) => sum + r.rating, 0) / count).toFixed(1) : 0;
+                const starsEl = document.getElementById(`rating-stars-${tour.id}`);
+                const textEl = document.getElementById(`rating-text-${tour.id}`);
+                if (starsEl) starsEl.innerText = renderStars(avg);
+                if (textEl) textEl.innerText = `${avg > 0 ? avg : 'No'} ${count === 1 ? 'review' : 'reviews'}`;
             });
         }
 
-        // Update database status indicator
-        function updateDatabaseStatus(online) {
-            isOnline = online;
-            const statusElement = document.getElementById('dbStatus');
-            if (online) {
-                statusElement.className = 'db-status online';
-                statusElement.innerHTML = '<i class="fas fa-database"></i> <span>Database Connected</span>';
-            } else {
-                statusElement.className = 'db-status offline';
-                statusElement.innerHTML = '<i class="fas fa-database"></i> <span>Offline Mode (Local)</span>';
-            }
-        }
-
-        // Open tour details
+        // --- MODAL FUNCTIONS ---
         function openTourDetails(tourId) {
             currentTourId = tourId;
             const tour = tours.find(t => t.id === tourId);
             if (!tour) return;
-            
-            // Set tour details
+
             document.getElementById('detail-tour-name').innerText = tour.name[lang];
             document.getElementById('detail-tour-price').innerText = `$${tour.price} USD`;
             document.getElementById('booking-tour-name').innerText = tour.name[lang];
             document.getElementById('booking-tour-price').innerText = `$${tour.price}.00 USD`;
             document.getElementById('review-tour-name').innerText = tour.name[lang];
-            
-            // Load tour details
+
             if (tour.details && tour.details[lang]) {
                 const details = tour.details[lang];
                 document.getElementById('detail-full-description').innerText = details.fullDescription;
@@ -1670,29 +1529,26 @@
                 document.getElementById('detail-difficulty').innerText = details.difficulty;
                 document.getElementById('detail-group-size').innerText = details.groupSize;
                 document.getElementById('detail-pickup').innerText = details.pickup;
-                
-                // Build included list
+
                 let includedHTML = '';
                 details.included.forEach(item => {
                     includedHTML += `<li><i class="fas fa-check"></i> ${item}</li>`;
                 });
                 document.getElementById('detail-included').innerHTML = includedHTML;
-                
-                // Build to bring list
+
                 let toBringHTML = '';
                 details.toBring.forEach(item => {
                     toBringHTML += `<li><i class="fas fa-suitcase"></i> ${item}</li>`;
                 });
                 document.getElementById('detail-to-bring').innerHTML = toBringHTML;
-                
-                // Build gallery
+
                 let galleryHTML = '';
                 details.gallery.forEach(img => {
                     galleryHTML += `<img src="${img}" alt="Tour image">`;
                 });
                 document.getElementById('detail-gallery').innerHTML = galleryHTML;
             } else {
-                // Default details
+                // Fallback details
                 document.getElementById('detail-full-description').innerText = tour.desc[lang];
                 document.getElementById('detail-duration').innerText = "Full day";
                 document.getElementById('detail-difficulty').innerText = "Easy";
@@ -1714,39 +1570,38 @@
                     <img src="https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=400" alt="Tour image">
                 `;
             }
-            
-            // Load rating from cache
-            const tourReviews = allReviews[tourId] || [];
-            const reviewCount = tourReviews.length;
-            const avgRating = reviewCount > 0 ? 
-                (tourReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1) : 0;
-            
-            document.getElementById('detail-rating-stars').innerHTML = renderStars(avgRating);
-            document.getElementById('detail-rating-text').innerText = `(${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})`;
-            
-            // Open modal with details tab
+
+            // Load rating (from cache? but we can fetch quickly)
+            loadReviewsForTour(tourId).then(reviews => {
+                const count = reviews.length;
+                const avg = count ? (reviews.reduce((sum, r) => sum + r.rating, 0) / count).toFixed(1) : 0;
+                document.getElementById('detail-rating-stars').innerHTML = renderStars(avg);
+                document.getElementById('detail-rating-text').innerText = `(${count} ${count === 1 ? 'review' : 'reviews'})`;
+            });
+
             document.getElementById('tourModal').style.display = 'flex';
             switchTab('details');
         }
 
-        // Open tour reviews
         async function openTourReviews(tourId) {
-            await openTourDetails(tourId);
+            currentTourId = tourId;
+            const tour = tours.find(t => t.id === tourId);
+            if (!tour) return;
+            document.getElementById('review-tour-name').innerText = tour.name[lang];
+            const reviews = await loadReviewsForTour(tourId);
+            updateReviewDisplay(reviews);
+            document.getElementById('tourModal').style.display = 'flex';
             switchTab('reviews');
-            await updateReviewDisplay();
         }
 
-        // Open tour booking
         function openTourBooking(tourId) {
             openTourDetails(tourId);
             switchTab('booking');
         }
 
-        // Switch tabs
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
             if (tabName === 'details') {
                 document.getElementById('tabDetails').classList.add('active');
                 document.getElementById('detailsTab').classList.add('active');
@@ -1756,129 +1611,104 @@
             } else {
                 document.getElementById('tabReviews').classList.add('active');
                 document.getElementById('reviewsTab').classList.add('active');
-                updateReviewDisplay();
             }
         }
 
-        // Update review display
-        function updateReviewDisplay() {
-            if (!currentTourId) return;
-            
-            const tourReviews = allReviews[currentTourId] || [];
-            const reviewCount = tourReviews.length;
-            const avgRating = reviewCount > 0 ? 
-                (tourReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1) : 0;
-            
-            document.getElementById('modal-rating-stars').innerHTML = renderStars(avgRating);
-            document.getElementById('modal-rating-text').innerText = `(${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})`;
-            
-            const reviewsList = document.getElementById('reviewsList');
-            reviewsList.innerHTML = '';
-            
-            if (tourReviews.length === 0) {
-                reviewsList.innerHTML = `<div class="no-reviews">${i18n[lang].noReviews}</div>`;
-            } else {
-                // Show only 10 most recent reviews
-                const recentReviews = tourReviews.slice(0, 10);
-                recentReviews.forEach(review => {
-                    const reviewDate = new Date(review.createdAt).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                    });
-                    reviewsList.innerHTML += `
-                        <div class="review-item">
-                            <div class="review-header">
-                                <span class="review-name">${review.name}</span>
-                                <span class="review-date">${reviewDate}</span>
-                            </div>
-                            <div class="stars">${renderStars(review.rating)}</div>
-                            <p class="review-text">${review.text}</p>
-                        </div>
-                    `;
+        function updateReviewDisplay(reviews) {
+            const container = document.getElementById('reviewsList');
+            container.innerHTML = '';
+
+            if (!reviews || reviews.length === 0) {
+                container.innerHTML = `<div class="no-reviews">${i18n[lang].noReviews}</div>`;
+                document.getElementById('modal-rating-stars').innerHTML = '☆☆☆☆☆';
+                document.getElementById('modal-rating-text').innerText = '(0 reviews)';
+                return;
+            }
+
+            const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+            document.getElementById('modal-rating-stars').innerHTML = renderStars(avg);
+            document.getElementById('modal-rating-text').innerText = `(${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'})`;
+
+            reviews.forEach(r => {
+                const date = new Date(r.created_at).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric'
                 });
-            }
+                container.innerHTML += `
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="review-name">${r.user_name}</span>
+                            <span class="review-date">${date}</span>
+                        </div>
+                        <div class="stars">${renderStars(r.rating)}</div>
+                        <p class="review-text">${r.review_text}</p>
+                    </div>
+                `;
+            });
         }
 
-        // Submit review
         async function submitReview(event) {
             event.preventDefault();
-            
+
             const name = document.getElementById('reviewerName').value;
             const rating = document.querySelector('input[name="rating"]:checked');
             const text = document.getElementById('reviewText').value;
-            
+
             if (!rating) {
                 alert('Please select a rating');
                 return;
             }
-            
-            const submitBtn = document.getElementById('btn-submit-review');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + i18n[lang].loading;
-            submitBtn.disabled = true;
-            
-            try {
-                const reviewData = {
-                    tourId: currentTourId,
-                    name: name,
-                    rating: parseInt(rating.value),
-                    text: text
-                };
-                
-                // Save to database
-                const result = await saveReviewToDatabase(reviewData);
-                
-                if (result.success) {
-                    // Show success message
-                    submitBtn.innerHTML = '<i class="fas fa-check"></i> ' + i18n[lang].success;
-                    
-                    // Clear form
-                    document.getElementById('reviewerName').value = '';
-                    document.querySelectorAll('input[name="rating"]').forEach(radio => radio.checked = false);
-                    document.getElementById('reviewText').value = '';
-                    
-                    // Refresh displays
-                    updateReviewDisplay();
-                    updateAllTourRatings();
-                    
-                    // Update details tab rating
-                    const tourReviews = allReviews[currentTourId] || [];
-                    const reviewCount = tourReviews.length;
-                    const avgRating = reviewCount > 0 ? 
-                        (tourReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1) : 0;
-                    document.getElementById('detail-rating-stars').innerHTML = renderStars(avgRating);
-                    document.getElementById('detail-rating-text').innerText = `(${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})`;
-                    
-                    // Reset button after delay
-                    setTimeout(() => {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }, 2000);
-                }
-            } catch (error) {
-                console.error("Error submitting review:", error);
-                submitBtn.innerHTML = 'Error - Try Again';
+
+            const btn = document.getElementById('btn-submit-review');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + i18n[lang].loading;
+            btn.disabled = true;
+
+            const result = await saveReviewToSupabase({
+                tourId: currentTourId,
+                name: name,
+                rating: parseInt(rating.value),
+                text: text
+            });
+
+            if (result.success) {
+                btn.innerHTML = '<i class="fas fa-check"></i> ' + i18n[lang].success;
+
+                document.getElementById('reviewerName').value = '';
+                document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+                document.getElementById('reviewText').value = '';
+
+                const updatedReviews = await loadReviewsForTour(currentTourId);
+                updateReviewDisplay(updatedReviews);
+
+                // Update main card
+                const count = updatedReviews.length;
+                const avg = count ? (updatedReviews.reduce((s, r) => s + r.rating, 0) / count).toFixed(1) : 0;
+                const starsEl = document.getElementById(`rating-stars-${currentTourId}`);
+                const textEl = document.getElementById(`rating-text-${currentTourId}`);
+                if (starsEl) starsEl.innerText = renderStars(avg);
+                if (textEl) textEl.innerText = `${avg > 0 ? avg : 'No'} ${count === 1 ? 'review' : 'reviews'}`;
+
+                // Update detail tab rating
+                document.getElementById('detail-rating-stars').innerHTML = renderStars(avg);
+                document.getElementById('detail-rating-text').innerText = `(${count} ${count === 1 ? 'review' : 'reviews'})`;
+
                 setTimeout(() => {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }, 3000);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 2000);
+            } else {
+                alert('Error submitting review. Please try again.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
 
-        // Close modal
-        function closeModal() {
-            document.getElementById('tourModal').style.display = 'none';
-            currentTourId = null;
-        }
-
-        // Process payment
         function processPayment(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-pay-now');
             const originalText = btn.innerText;
             btn.innerText = i18n[lang].loading + "...";
-            
+
             setTimeout(() => {
                 document.getElementById('bookingTab').style.display = 'none';
                 document.getElementById('successMsg').style.display = 'block';
@@ -1893,49 +1723,27 @@
             }, 1500);
         }
 
-        // Filter tours
         function filterTours() {
             renderTours(document.getElementById('searchInput').value);
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Initialize date input with tomorrow's date
+        function closeModal() {
+            document.getElementById('tourModal').style.display = 'none';
+            currentTourId = null;
+        }
+
+        window.onclick = (e) => { 
+            if (e.target == document.getElementById('tourModal')) closeModal(); 
+        };
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', function() {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             document.getElementById('travelDate').min = tomorrow.toISOString().split('T')[0];
             document.getElementById('travelDate').value = tomorrow.toISOString().split('T')[0];
-            
-            // Initial render - IMMEDIATE, no waiting
             setLang('en');
-            
-            // Load reviews from database in background (non-blocking)
-            setTimeout(async () => {
-                await loadReviewsFromDatabase();
-                updateAllTourRatings();
-            }, 100); // Small delay to ensure page loads first
-            
-            // Check database connection periodically
-            setInterval(async () => {
-                try {
-                    const response = await fetch(DATABASE_CONFIG.API_URL, {
-                        method: 'GET',
-                        headers: {
-                            'X-Master-Key': DATABASE_CONFIG.API_KEY,
-                            'X-Bin-Meta': 'false'
-                        }
-                    });
-                    updateDatabaseStatus(response.ok);
-                } catch (error) {
-                    updateDatabaseStatus(false);
-                }
-            }, 30000); // Check every 30 seconds
         });
-
-        // Close modal when clicking outside
-        window.onclick = (e) => { 
-            if(e.target == document.getElementById('tourModal')) closeModal(); 
-        }
     </script>
 </body>
-</html>
+    </html>
