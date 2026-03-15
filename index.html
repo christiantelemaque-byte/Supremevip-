@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        /* (Keep all your existing styles – they are unchanged and working) */
+        /* All your existing styles – kept exactly as before */
         :root {
             --primary: #00897b;
             --primary-dark: #00695c;
@@ -648,9 +648,9 @@
             
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // --- STRIPE CONFIGURATION (replace with your publishable key) ---
-            const STRIPE_PUBLISHABLE_KEY = 'pk_test_your_publishable_key'; // 👈 REPLACE THIS
-            const PROXY_URL = 'https://your-proxy.vercel.app'; // 👈 REPLACE THIS
+            // --- STRIPE CONFIGURATION (your live key inserted) ---
+            const STRIPE_PUBLISHABLE_KEY = 'pk_live_Z3DOEXDkQ29anfNUNNsk2XNb';
+            const PROXY_URL = 'https://your-vercel-project.vercel.app'; // 👈 REPLACE THIS with your deployed proxy URL
 
             // Initialize Stripe safely – if it fails, the rest of the page still works
             let stripe, elements, cardElement;
