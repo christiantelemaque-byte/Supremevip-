@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Reuse styles from index or add new ones */
         :root {
             --primary: #00897b;
             --primary-dark: #00695c;
@@ -142,7 +141,7 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpdHZldHhicWR1dGt4aXlvd2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MDQ4NTksImV4cCI6MjA4ODk4MDg1OX0.hyf2vfgJT-ISijzaklpouO-VBrfBcQDosp890pztEc4';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // Tours data (needed for tour images) – copy your full tours array here
+            // ========== FULL TOURS ARRAY (same as index) ==========
             const tours = [ /* ... your full 23‑item tours array ... */ ];
 
             let currentUser = null;
