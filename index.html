@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        /* (Keep all your existing styles – unchanged) */
+        /* (All your existing styles – kept exactly as before) */
         :root {
             --primary: #00897b;
             --primary-dark: #00695c;
@@ -585,7 +585,6 @@
                             <div id="card-element" class="form-control" style="padding: 0;"></div>
                             <div id="card-errors" style="color: #f44336; font-size: 0.85rem; margin-top: 5px;"></div>
                         </div>
-                        <!-- We don't need separate card fields anymore -->
                         <button type="submit" class="btn-pay" id="btn-pay-now">Pay Now</button>
                     </form>
                 </div>
@@ -643,7 +642,7 @@
 
     <script>
         (function() {
-            // --- CORRECT SUPABASE CONFIGURATION ---
+            // --- SUPABASE CONFIGURATION (correct) ---
             const SUPABASE_URL = 'https://iitvetxbqdutkxiyowbp.supabase.co';
             const SUPABASE_ANON_KEY = 'sb_publishable_lmp0WexjNauoHELEFo9H8g_RFbOKuRU';
             
@@ -655,11 +654,782 @@
             const elements = stripe.elements();
             const cardElement = elements.create('card', { style: { base: { fontSize: '16px' } } });
             
-            // --- PROXY URL FOR BACKEND (replace with your Vercel proxy URL) ---
+            // --- PROXY URL (replace with your Vercel proxy URL) ---
             const PROXY_URL = 'https://your-proxy.vercel.app'; // 👈 REPLACE THIS
 
             // ========== FULL TOURS ARRAY (23 excursions) ==========
-            const tours = [ /* ... your full 23‑item tours array ... */ ]; // (Insert your full array here)
+            const tours = [
+                { 
+                    id: 1, 
+                    name: {en: "Saona Island VIP", es: "Isla Saona VIP"}, 
+                    price: 85, 
+                    img: "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500", 
+                    desc: {en: "Catamaran, buffet, and natural pool.", es: "Catamarán, buffet y piscina natural."},
+                    details: {
+                        en: {
+                            fullDescription: "Experience the ultimate Caribbean paradise on Saona Island. Enjoy a luxury catamaran ride, savor a delicious buffet lunch, and swim in the stunning natural pool. This VIP tour includes all amenities for a perfect day in paradise.",
+                            duration: "Full day (8-10 hours)",
+                            difficulty: "Easy",
+                            groupSize: "Up to 30 people",
+                            pickup: "Yes, from all major hotels",
+                            included: ["Luxury catamaran ride", "Buffet lunch with drinks", "Natural pool swimming", "Professional guides", "Hotel pickup & drop-off", "Snorkeling equipment"],
+                            toBring: ["Sunscreen", "Swimwear", "Towel", "Camera", "Hat"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400",
+                                "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400",
+                                "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Vive el paraíso caribeño definitivo en la Isla Saona. Disfruta de un paseo en catamarán de lujo, saborea un delicioso almuerzo buffet y nada en la impresionante piscina natural. Este tour VIP incluye todas las comodidades para un día perfecto en el paraíso.",
+                            duration: "Día completo (8-10 horas)",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 30 personas",
+                            pickup: "Sí, desde todos los hoteles principales",
+                            included: ["Paseo en catamarán de lujo", "Almuerzo buffet con bebidas", "Natación en piscina natural", "Guías profesionales", "Recogida y regreso al hotel", "Equipo de snorkel"],
+                            toBring: ["Protector solar", "Traje de baño", "Toalla", "Cámara", "Sombrero"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400",
+                                "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400",
+                                "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 2, 
+                    name: {en: "Catalina Island", es: "Isla Catalina"}, 
+                    price: 75, 
+                    img: "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=500", 
+                    desc: {en: "Crystal clear water and snorkeling.", es: "Agua cristalina y snorkel."},
+                    details: {
+                        en: {
+                            fullDescription: "Discover the breathtaking beauty of Catalina Island with its crystal-clear waters perfect for snorkeling. Explore vibrant coral reefs and swim alongside tropical fish in one of the Caribbean's most beautiful locations.",
+                            duration: "7-8 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 25 people",
+                            pickup: "Yes",
+                            included: ["Boat transfer", "Snorkeling gear", "Lunch", "Guided tour", "Beach access"],
+                            toBring: ["Sunscreen", "Swimwear", "Water shoes", "Camera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=400",
+                                "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Descubre la impresionante belleza de la Isla Catalina con sus aguas cristalinas perfectas para hacer snorkel. Explora vibrantes arrecifes de coral y nada junto a peces tropicales en uno de los lugares más hermosos del Caribe.",
+                            duration: "7-8 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 25 personas",
+                            pickup: "Sí",
+                            included: ["Traslado en barco", "Equipo de snorkel", "Almuerzo", "Tour guiado", "Acceso a la playa"],
+                            toBring: ["Protector solar", "Traje de baño", "Zapatos de agua", "Cámara"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=400",
+                                "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 3, 
+                    name: {en: "Santo Domingo Tour", es: "Tour Santo Domingo"}, 
+                    price: 90, 
+                    img: "https://images.unsplash.com/photo-1596423985558-a53e6c039985?w=500", 
+                    desc: {en: "The first city of the New World.", es: "La primera ciudad del Nuevo Mundo."},
+                    details: {
+                        en: {
+                            fullDescription: "Step back in time and explore the first city of the New World. Visit colonial landmarks, historic buildings, and experience the rich culture of Santo Domingo.",
+                            duration: "6-7 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 20 people",
+                            pickup: "Yes",
+                            included: ["Professional guide", "Transportation", "Entrance fees", "Lunch"],
+                            toBring: ["Comfortable shoes", "Camera", "Water bottle"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1596423985558-a53e6c039985?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Retrocede en el tiempo y explora la primera ciudad del Nuevo Mundo. Visita lugares coloniales, edificios históricos y experimenta la rica cultura de Santo Domingo.",
+                            duration: "6-7 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 20 personas",
+                            pickup: "Sí",
+                            included: ["Guía profesional", "Transporte", "Entradas", "Almuerzo"],
+                            toBring: ["Zapatos cómodos", "Cámara", "Botella de agua"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1596423985558-a53e6c039985?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 4, 
+                    name: {en: "Samana Explorer", es: "Samaná Explora"}, 
+                    price: 125, 
+                    img: "https://images.unsplash.com/photo-1589785233216-d39a3f2d0113?w=500", 
+                    desc: {en: "Waterfalls and Bacardi Island.", es: "Cascadas e Isla Bacardí."},
+                    details: {
+                        en: {
+                            fullDescription: "Explore the natural wonders of Samana with its stunning waterfalls and beautiful Bacardi Island. A perfect adventure for nature lovers.",
+                            duration: "Full day",
+                            difficulty: "Moderate",
+                            groupSize: "Up to 15 people",
+                            pickup: "Yes",
+                            included: ["Transportation", "Guide", "Lunch", "Entrance fees"],
+                            toBring: ["Swimwear", "Towel", "Hiking shoes", "Camera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1589785233216-d39a3f2d0113?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Explora las maravillas naturales de Samaná con sus impresionantes cascadas y la hermosa Isla Bacardí. Una aventura perfecta para los amantes de la naturaleza.",
+                            duration: "Día completo",
+                            difficulty: "Moderada",
+                            groupSize: "Hasta 15 personas",
+                            pickup: "Sí",
+                            included: ["Transporte", "Guía", "Almuerzo", "Entradas"],
+                            toBring: ["Traje de baño", "Toalla", "Zapatos de senderismo", "Cámara"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1589785233216-d39a3f2d0113?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 5, 
+                    name: {en: "Los Haitises Park", es: "Parque Los Haitises"}, 
+                    price: 95, 
+                    img: "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=500", 
+                    desc: {en: "Cave exploring and mangroves.", es: "Exploración de cuevas y manglares."},
+                    details: {
+                        en: {
+                            fullDescription: "Discover the unique ecosystem of Los Haitises National Park with its impressive caves and mangrove forests. A true natural wonder.",
+                            duration: "6-7 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 12 people",
+                            pickup: "Yes",
+                            included: ["Boat tour", "Guide", "Lunch", "Safety equipment"],
+                            toBring: ["Comfortable clothes", "Insect repellent", "Camera", "Binoculars"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Descubre el ecosistema único del Parque Nacional Los Haitises con sus impresionantes cuevas y bosques de manglares. Una verdadera maravilla natural.",
+                            duration: "6-7 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 12 personas",
+                            pickup: "Sí",
+                            included: ["Tour en barco", "Guía", "Almuerzo", "Equipo de seguridad"],
+                            toBring: ["Ropa cómoda", "Repelente de insectos", "Cámara", "Binoculares"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 6, 
+                    name: {en: "Jungle Zipline", es: "Zipline en la Selva"}, 
+                    price: 65, 
+                    img: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=500", 
+                    desc: {en: "Fly through the tropical canopy.", es: "Vuela sobre el dosel tropical."},
+                    details: {
+                        en: {
+                            fullDescription: "Experience the thrill of ziplining through the lush jungle canopy. Multiple lines with breathtaking views of the tropical forest.",
+                            duration: "3-4 hours",
+                            difficulty: "Moderate",
+                            groupSize: "Up to 10 people",
+                            pickup: "Yes",
+                            included: ["All safety equipment", "Professional guides", "Training", "Refreshments"],
+                            toBring: ["Comfortable clothes", "Closed-toe shoes", "Adventure spirit!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Experimenta la emoción de volar en tirolesa a través del frondoso dosel de la jungla. Múltiples líneas con vistas impresionantes del bosque tropical.",
+                            duration: "3-4 horas",
+                            difficulty: "Moderada",
+                            groupSize: "Hasta 10 personas",
+                            pickup: "Sí",
+                            included: ["Todo el equipo de seguridad", "Guías profesionales", "Entrenamiento", "Refrigerios"],
+                            toBring: ["Ropa cómoda", "Zapatos cerrados", "¡Espíritu de aventura!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 7, 
+                    name: {en: "Horseback Riding", es: "Paseo a Caballo"}, 
+                    price: 55, 
+                    img: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=500", 
+                    desc: {en: "Beach and trail adventure.", es: "Aventura en playa y senderos."},
+                    details: {
+                        en: {
+                            fullDescription: "Enjoy a peaceful horseback ride along beautiful beaches and through scenic trails. Suitable for all experience levels.",
+                            duration: "2-3 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 8 people",
+                            pickup: "Yes",
+                            included: ["Horse and equipment", "Guide", "Safety briefing", "Photos"],
+                            toBring: ["Long pants", "Comfortable shoes", "Sunscreen", "Camera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Disfruta de un tranquilo paseo a caballo por hermosas playas y senderos escénicos. Adecuado para todos los niveles de experiencia.",
+                            duration: "2-3 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 8 personas",
+                            pickup: "Sí",
+                            included: ["Caballo y equipo", "Guía", "Breve de seguridad", "Fotos"],
+                            toBring: ["Pantalones largos", "Zapatos cómodos", "Protector solar", "Cámara"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 8, 
+                    name: {en: "La Hacienda Park", es: "Parque La Hacienda"}, 
+                    price: 99, 
+                    img: "https://images.unsplash.com/photo-1533644026857-463e264585c4?w=500", 
+                    desc: {en: "7 activities in one park.", es: "7 actividades en un solo parque."},
+                    details: {
+                        en: {
+                            fullDescription: "Experience 7 different activities in one amazing park: ziplining, horseback riding, swimming, and more! Perfect for families and groups.",
+                            duration: "Full day",
+                            difficulty: "Mixed",
+                            groupSize: "Up to 40 people",
+                            pickup: "Yes",
+                            included: ["All activities", "Lunch buffet", "Guide", "Equipment"],
+                            toBring: ["Swimwear", "Towel", "Change of clothes", "Camera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1533644026857-463e264585c4?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Experimenta 7 actividades diferentes en un parque increíble: tirolesa, paseo a caballo, natación y más! Perfecto para familias y grupos.",
+                            duration: "Día completo",
+                            difficulty: "Mixta",
+                            groupSize: "Hasta 40 personas",
+                            pickup: "Sí",
+                            included: ["Todas las actividades", "Almuerzo buffet", "Guía", "Equipo"],
+                            toBring: ["Traje de baño", "Toalla", "Ropa de cambio", "Cámara"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1533644026857-463e264585c4?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 9, 
+                    name: {en: "Private Catamaran", es: "Catamarán Privado"}, 
+                    price: 500, 
+                    img: "https://images.unsplash.com/photo-1566418872583-04e38e19c3b0?w=500", 
+                    desc: {en: "Luxury sailing for your group.", es: "Navegación de lujo para su grupo."},
+                    details: {
+                        en: {
+                            fullDescription: "Exclusive private catamaran experience for your group. Custom itinerary, premium service, and luxury amenities on board.",
+                            duration: "4-8 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 15 people",
+                            pickup: "Yes, from marina",
+                            included: ["Private catamaran", "Captain and crew", "Open bar", "Gourmet lunch", "Snorkeling equipment"],
+                            toBring: ["Swimwear", "Sunscreen", "Camera", "Party mood!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1566418872583-04e38e19c3b0?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Experiencia exclusiva en catamarán privado para su grupo. Itinerario personalizado, servicio premium y comodidades de lujo a bordo.",
+                            duration: "4-8 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 15 personas",
+                            pickup: "Sí, desde el marina",
+                            included: ["Catamarán privado", "Capitán y tripulación", "Barra libre", "Almuerzo gourmet", "Equipo de snorkel"],
+                            toBring: ["Traje de baño", "Protector solar", "Cámara", "¡Ánimo de fiesta!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1566418872583-04e38e19c3b0?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 10, 
+                    name: {en: "Speed Boat", es: "Lancha Rápida"}, 
+                    price: 75, 
+                    img: "https://images.unsplash.com/photo-1574347201732-f1262d6657c6?w=500", 
+                    desc: {en: "Drive your own boat.", es: "Conduzca su propio bote."},
+                    details: {
+                        en: {
+                            fullDescription: "Take control of your own speed boat adventure! Explore hidden coves and beautiful coastlines at your own pace.",
+                            duration: "2-3 hours",
+                            difficulty: "Easy (with instruction)",
+                            groupSize: "Up to 6 people",
+                            pickup: "Yes, from marina",
+                            included: ["Speed boat rental", "Safety briefing", "Fuel", "Life jackets", "Route map"],
+                            toBring: ["Swimwear", "Sunscreen", "Waterproof bag", "Camera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1574347201732-f1262d6657c6?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Toma el control de tu propia aventura en lancha rápida! Explora calas escondidas y hermosas costas a tu propio ritmo.",
+                            duration: "2-3 horas",
+                            difficulty: "Fácil (con instrucción)",
+                            groupSize: "Hasta 6 personas",
+                            pickup: "Sí, desde el marina",
+                            included: ["Alquiler de lancha rápida", "Breve de seguridad", "Combustible", "Chalecos salvavidas", "Mapa de ruta"],
+                            toBring: ["Traje de baño", "Protector solar", "Bolsa impermeable", "Cámara"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1574347201732-f1262d6657c6?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 11, 
+                    name: {en: "Dolphin Swim", es: "Nado con Delfines"}, 
+                    price: 115, 
+                    img: "https://images.unsplash.com/photo-1570415309668-3e9a4f610332?w=500", 
+                    desc: {en: "Interaction and swimming.", es: "Interacción y nado."},
+                    details: {
+                        en: {
+                            fullDescription: "Swim with dolphins in their natural habitat! An unforgettable experience interacting with these intelligent marine mammals.",
+                            duration: "2 hours",
+                            difficulty: "Easy",
+                            groupSize: "Small groups",
+                            pickup: "Yes",
+                            included: ["Dolphin interaction", "Swimming session", "Professional trainers", "Photos", "Educational briefing"],
+                            toBring: ["Swimwear", "Towel", "Camera (waterproof)", "Change of clothes"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1570415309668-3e9a4f610332?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Nada con delfines en su hábitat natural! Una experiencia inolvidable interactuando con estos inteligentes mamíferos marinos.",
+                            duration: "2 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Grupos pequeños",
+                            pickup: "Sí",
+                            included: ["Interacción con delfines", "Sesión de natación", "Entrenadores profesionales", "Fotos", "Breve educativo"],
+                            toBring: ["Traje de baño", "Toalla", "Cámara (impermeable)", "Ropa de cambio"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1570415309668-3e9a4f610332?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 12, 
+                    name: {en: "Scuba Doo", es: "Scuba Doo"}, 
+                    price: 60, 
+                    img: "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?w=500", 
+                    desc: {en: "Underwater scooter fun.", es: "Diversión en moto submarina."},
+                    details: {
+                        en: {
+                            fullDescription: "Ride an underwater scooter and explore the marine world without needing scuba certification! Easy and fun for everyone.",
+                            duration: "1-2 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 8 people",
+                            pickup: "Yes",
+                            included: ["Underwater scooter", "Safety equipment", "Guide", "Briefing"],
+                            toBring: ["Swimwear", "Towel", "GoPro or waterproof camera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Maneja una moto submarina y explora el mundo marino sin necesidad de certificación de buceo! Fácil y divertido para todos.",
+                            duration: "1-2 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 8 personas",
+                            pickup: "Sí",
+                            included: ["Moto submarina", "Equipo de seguridad", "Guía", "Breve"],
+                            toBring: ["Traje de baño", "Toalla", "GoPro o cámara impermeable"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 13, 
+                    name: {en: "Party Boat", es: "Barco de Fiesta"}, 
+                    price: 55, 
+                    img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=500", 
+                    desc: {en: "Drinks, music, and snorkeling.", es: "Bebidas, música y snorkel."},
+                    details: {
+                        en: {
+                            fullDescription: "Join the ultimate party on the water! Dance to great music, enjoy unlimited drinks, and snorkel in beautiful spots.",
+                            duration: "4 hours",
+                            difficulty: "Easy",
+                            groupSize: "Large groups",
+                            pickup: "Yes, from beach",
+                            included: ["Open bar", "DJ music", "Snorkeling equipment", "Light snacks", "Fun atmosphere!"],
+                            toBring: ["Swimwear", "Sunscreen", "Towel", "Party attitude"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Únete a la mejor fiesta en el agua! Baila con buena música, disfruta de bebidas ilimitadas y haz snorkel en lugares hermosos.",
+                            duration: "4 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Grupos grandes",
+                            pickup: "Sí, desde la playa",
+                            included: ["Barra libre", "Música de DJ", "Equipo de snorkel", "Aperitivos ligeros", "¡Ambiente divertido!"],
+                            toBring: ["Traje de baño", "Protector solar", "Toalla", "Actitud de fiesta"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 14, 
+                    name: {en: "Buggy Adventure", es: "Aventura en Buggy"}, 
+                    price: 70, 
+                    img: "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=500", 
+                    desc: {en: "Off-road mud and fun.", es: "Lodo y diversión todoterreno."},
+                    details: {
+                        en: {
+                            fullDescription: "Get dirty and have fun on an off-road buggy adventure through mud, trails, and scenic routes. An adrenaline-packed experience!",
+                            duration: "3 hours",
+                            difficulty: "Moderate",
+                            groupSize: "Up to 12 people",
+                            pickup: "Yes",
+                            included: ["Buggy rental", "Safety gear", "Guide", "Mud course", "Photos"],
+                            toBring: ["Clothes you don't mind getting dirty", "Closed-toe shoes", "Sunglasses", "Camera (protected)"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Ensúciate y diviértete en una aventura todoterreno en buggy a través de lodo, senderos y rutas escénicas. Una experiencia llena de adrenalina!",
+                            duration: "3 horas",
+                            difficulty: "Moderada",
+                            groupSize: "Hasta 12 personas",
+                            pickup: "Sí",
+                            included: ["Alquiler de buggy", "Equipo de seguridad", "Guía", "Recorrido de lodo", "Fotos"],
+                            toBring: ["Ropa que no te importe ensuciar", "Zapatos cerrados", "Gafas de sol", "Cámara (protegida)"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 15, 
+                    name: {en: "Deep Sea Fishing", es: "Pesca de Altura"}, 
+                    price: 130, 
+                    img: "https://images.unsplash.com/photo-1520114878144-6123749968dd?w=500", 
+                    desc: {en: "Catch the big one.", es: "Pesca la pieza más grande."},
+                    details: {
+                        en: {
+                            fullDescription: "Professional deep sea fishing expedition. Try to catch marlin, tuna, mahi-mahi and other big game fish in the Caribbean waters.",
+                            duration: "6-8 hours",
+                            difficulty: "Moderate",
+                            groupSize: "Up to 6 people",
+                            pickup: "Yes, from marina",
+                            included: ["Fishing boat", "Professional captain", "All fishing equipment", "Bait", "Refreshments"],
+                            toBring: ["Sunscreen", "Hat", "Camera", "Seasickness medication if needed"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1520114878144-6123749968dd?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Expedición profesional de pesca en alta mar. Intenta atrapar marlín, atún, dorado y otros peces de caza mayor en las aguas del Caribe.",
+                            duration: "6-8 horas",
+                            difficulty: "Moderada",
+                            groupSize: "Hasta 6 personas",
+                            pickup: "Sí, desde el marina",
+                            included: ["Barco de pesca", "Capitán profesional", "Todo el equipo de pesca", "Cebo", "Refrigerios"],
+                            toBring: ["Protector solar", "Sombrero", "Cámara", "Medicamento para mareos si es necesario"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1520114878144-6123749968dd?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 16, 
+                    name: {en: "Coco Bongo", es: "Coco Bongo"}, 
+                    price: 80, 
+                    img: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=500", 
+                    desc: {en: "The best show in the Caribbean.", es: "El mejor show del Caribe."},
+                    details: {
+                        en: {
+                            fullDescription: "Experience the most spectacular show in the Caribbean! Acrobats, singers, dancers, and non-stop entertainment with open bar included.",
+                            duration: "4-5 hours",
+                            difficulty: "Easy",
+                            groupSize: "Large groups",
+                            pickup: "Yes, from hotels",
+                            included: ["Show ticket", "Open bar", "VIP seating", "Transportation"],
+                            toBring: ["Party clothes", "ID", "Camera", "Dancing shoes"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Experimenta el espectáculo más espectacular del Caribe! Acróbatas, cantantes, bailarines y entretenimiento sin parar con barra libre incluida.",
+                            duration: "4-5 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Grupos grandes",
+                            pickup: "Sí, desde hoteles",
+                            included: ["Entrada al show", "Barra libre", "Asientos VIP", "Transporte"],
+                            toBring: ["Ropa de fiesta", "Identificación", "Cámara", "Zapatos para bailar"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=400"
+                            ]
+                        }
+                    }
+                },
+                // New 7 excursions
+                { 
+                    id: 17, 
+                    name: {en: "Zip-line Adventure", es: "Aventura en Tirolesa"}, 
+                    price: 45, 
+                    img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500", 
+                    desc: {en: "Exciting zip-line through the jungle.", es: "Emocionante tirolesa por la jungla."},
+                    details: {
+                        en: {
+                            fullDescription: "Soar through the treetops on our thrilling zip-line course. Experience the adrenaline rush as you fly above the lush jungle canopy with breathtaking views.",
+                            duration: "3-4 hours",
+                            difficulty: "Moderate",
+                            groupSize: "Up to 15 people",
+                            pickup: "Yes",
+                            included: ["All safety equipment", "Professional guides", "Training session", "Refreshments"],
+                            toBring: ["Comfortable clothes", "Closed-toe shoes", "Camera", "Adventure spirit!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+                                "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Deslízate por las copas de los árboles en nuestro emocionante curso de tirolesa. Experimenta la adrenalina mientras vuelas sobre el frondoso dosel de la jungla con vistas impresionantes.",
+                            duration: "3-4 horas",
+                            difficulty: "Moderada",
+                            groupSize: "Hasta 15 personas",
+                            pickup: "Sí",
+                            included: ["Todo el equipo de seguridad", "Guías profesionales", "Sesión de entrenamiento", "Refrigerios"],
+                            toBring: ["Ropa cómoda", "Zapatos cerrados", "Cámara", "¡Espíritu de aventura!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+                                "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 18, 
+                    name: {en: "Party Boat Extreme", es: "Barco de Fiesta Extremo"}, 
+                    price: 60, 
+                    img: "https://images.unsplash.com/photo-1511994717241-8e4e484dfa8c?w=500", 
+                    desc: {en: "Party boat with music and open bar.", es: "Barco de fiesta con música y barra libre."},
+                    details: {
+                        en: {
+                            fullDescription: "Get ready for the ultimate party experience on the water! Dance to the hottest music, enjoy unlimited drinks from our open bar, and make unforgettable memories with friends.",
+                            duration: "4-5 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 50 people",
+                            pickup: "Yes, from designated points",
+                            included: ["Open bar (alcoholic & non-alcoholic)", "Professional DJ", "Snorkeling stop", "Light snacks"],
+                            toBring: ["Swimwear", "Sunscreen", "Dancing shoes", "Party attitude!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1511994717241-8e4e484dfa8c?w=400",
+                                "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Prepárate para la experiencia de fiesta definitiva en el agua! Baila con la mejor música, disfruta de bebidas ilimitadas de nuestra barra libre y crea recuerdos inolvidables con amigos.",
+                            duration: "4-5 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 50 personas",
+                            pickup: "Sí, desde puntos designados",
+                            included: ["Barra libre (alcohólica y no alcohólica)", "DJ profesional", "Parada para snorkel", "Aperitivos ligeros"],
+                            toBring: ["Traje de baño", "Protector solar", "Zapatos para bailar", "¡Actitud de fiesta!"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1511994717241-8e4e484dfa8c?w=400",
+                                "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 19, 
+                    name: {en: "Parasailing Paradise", es: "Parapente en el Paraíso"}, 
+                    price: 75, 
+                    img: "https://images.unsplash.com/photo-1575058752200-a9d6fa0a09a1?w=500", 
+                    desc: {en: "Fly above the ocean with parasailing.", es: "Vuela sobre el océano con parapente."},
+                    details: {
+                        en: {
+                            fullDescription: "Experience the thrill of parasailing with breathtaking views of the Caribbean coastline. Fly high above the crystal-clear waters in complete safety.",
+                            duration: "1-2 hours",
+                            difficulty: "Easy",
+                            groupSize: "Small groups",
+                            pickup: "Yes, from beach",
+                            included: ["Parasailing equipment", "Safety briefing", "Boat ride", "Photos/videos"],
+                            toBring: ["Swimwear", "Sunscreen", "Camera", "Sense of adventure"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1575058752200-a9d6fa0a09a1?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Experimenta la emoción del parapente con vistas impresionantes de la costa caribeña. Vuela alto sobre las aguas cristalinas con total seguridad.",
+                            duration: "1-2 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Grupos pequeños",
+                            pickup: "Sí, desde la playa",
+                            included: ["Equipo de parapente", "Breve de seguridad", "Paseo en barco", "Fotos/videos"],
+                            toBring: ["Traje de baño", "Protector solar", "Cámara", "Sentido de aventura"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1575058752200-a9d6fa0a09a1?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 20, 
+                    name: {en: "Boogies Beach Ride", es: "Paseo en Boogies en la Playa"}, 
+                    price: 50, 
+                    img: "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=500", 
+                    desc: {en: "Fun boogie ride along the beach.", es: "Divertido paseo en boogies por la playa."},
+                    details: {
+                        en: {
+                            fullDescription: "Ride exciting boogie cars along beautiful sandy beaches. Perfect for families and friends looking for fun beach adventure.",
+                            duration: "2 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 10 people",
+                            pickup: "Yes",
+                            included: ["Boogie car rental", "Safety equipment", "Guide", "Beach route"],
+                            toBring: ["Beach clothes", "Sunglasses", "Camera", "Beach towel"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Maneja emocionantes carros boogie por hermosas playas de arena. Perfecto para familias y amigos que buscan diversión en la playa.",
+                            duration: "2 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 10 personas",
+                            pickup: "Sí",
+                            included: ["Alquiler de carro boogie", "Equipo de seguridad", "Guía", "Ruta por la playa"],
+                            toBring: ["Ropa de playa", "Gafas de sol", "Cámara", "Toalla de playa"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1582216666355-389f55e5a26c?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 21, 
+                    name: {en: "Safari Supreme", es: "Safari Supremo"}, 
+                    price: 120, 
+                    img: "https://images.unsplash.com/photo-1533577116858-5d894d8f9b9d?w=500", 
+                    desc: {en: "Luxury safari through natural parks.", es: "Safari de lujo por parques naturales."},
+                    details: {
+                        en: {
+                            fullDescription: "Luxury safari experience through the most beautiful natural parks. Comfortable transportation, expert guides, and unforgettable wildlife encounters.",
+                            duration: "Full day",
+                            difficulty: "Easy",
+                            groupSize: "Up to 12 people",
+                            pickup: "Yes, luxury vehicles",
+                            included: ["Luxury safari vehicle", "Expert guide", "Gourmet lunch", "Park entrances", "Refreshments"],
+                            toBring: ["Comfortable clothes", "Binoculars", "Camera", "Light jacket"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1533577116858-5d894d8f9b9d?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "Experiencia de safari de lujo por los parques naturales más hermosos. Transporte cómodo, guías expertos y encuentros con vida silvestre inolvidables.",
+                            duration: "Día completo",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 12 personas",
+                            pickup: "Sí, vehículos de lujo",
+                            included: ["Vehículo de safari de lujo", "Guía experto", "Almuerzo gourmet", "Entradas a parques", "Refrigerios"],
+                            toBring: ["Ropa cómoda", "Binoculares", "Cámara", "Chaqueta ligera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1533577116858-5d894d8f9b9d?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 22, 
+                    name: {en: "Glass Boat Tour", es: "Tour en Barco de Cristal"}, 
+                    price: 40, 
+                    img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500", 
+                    desc: {en: "See marine life through glass bottom.", es: "Vea la vida marina a través del fondo de cristal."},
+                    details: {
+                        en: {
+                            fullDescription: "Discover the underwater world without getting wet! Our glass-bottom boat allows you to see colorful coral reefs and tropical fish in crystal-clear waters.",
+                            duration: "1.5-2 hours",
+                            difficulty: "Easy",
+                            groupSize: "Up to 20 people",
+                            pickup: "Yes, from beach",
+                            included: ["Glass-bottom boat tour", "Guide", "Marine life spotting", "Educational commentary"],
+                            toBring: ["Camera", "Sunscreen", "Hat", "Binoculars"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Descubre el mundo submarino sin mojarte! Nuestro barco con fondo de cristal te permite ver coloridos arrecifes de coral y peces tropicales en aguas cristalinas.",
+                            duration: "1.5-2 horas",
+                            difficulty: "Fácil",
+                            groupSize: "Hasta 20 personas",
+                            pickup: "Sí, desde la playa",
+                            included: ["Tour en barco con fondo de cristal", "Guía", "Avistamiento de vida marina", "Comentario educativo"],
+                            toBring: ["Cámara", "Protector solar", "Sombrero", "Binoculares"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400"
+                            ]
+                        }
+                    }
+                },
+                { 
+                    id: 23, 
+                    name: {en: "Scape Park Adventure", es: "Aventura en Scape Park"}, 
+                    price: 95, 
+                    img: "https://images.unsplash.com/photo-1548586196-aa5803b5bfc8?w=500", 
+                    desc: {en: "Adventure park with multiple attractions.", es: "Parque de aventuras con múltiples atracciones."},
+                    details: {
+                        en: {
+                            fullDescription: "All-in-one adventure park with zip lines, cave exploration, cenote swimming, and more! Perfect for adrenaline junkies and nature lovers.",
+                            duration: "Full day",
+                            difficulty: "Mixed",
+                            groupSize: "Up to 25 people",
+                            pickup: "Yes",
+                            included: ["All park attractions", "Lunch buffet", "Safety equipment", "Professional guides", "Lockers"],
+                            toBring: ["Swimwear", "Towel", "Comfortable shoes", "Change of clothes", "Camera"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1548586196-aa5803b5bfc8?w=400"
+                            ]
+                        },
+                        es: {
+                            fullDescription: "¡Parque de aventuras todo en uno con tirolesas, exploración de cuevas, natación en cenotes y más! Perfecto para amantes de la adrenalina y la naturaleza.",
+                            duration: "Día completo",
+                            difficulty: "Mixta",
+                            groupSize: "Hasta 25 personas",
+                            pickup: "Sí",
+                            included: ["Todas las atracciones del parque", "Almuerzo buffet", "Equipo de seguridad", "Guías profesionales", "Casilleros"],
+                            toBring: ["Traje de baño", "Toalla", "Zapatos cómodos", "Ropa de cambio", "Cámara"],
+                            gallery: [
+                                "https://images.unsplash.com/photo-1548586196-aa5803b5bfc8?w=400"
+                            ]
+                        }
+                    }
+                }
+            ];
 
             // --- GLOBAL VARIABLES ---
             let lang = 'en';
@@ -667,25 +1437,216 @@
             let currentUser = null;
             let currentProfile = null;
 
-            const i18n = { /* ... your i18n object ... */ }; // (Keep as before)
+            const i18n = {
+                en: {
+                    title: "Experience Paradise", sub: "The most exclusive excursions in the Dominican Republic",
+                    search: "Search adventures...", book: "Book Now", date: "Travel Date",
+                    name: "Full Name", card: "Card Number", exp: "Expiry (MM/YY)", pay: "Book & Pay Now",
+                    sTitle: "Payment Confirmed!", sBody: "Your tickets have been sent to your email.",
+                    reviews: "Reviews", leaveReview: "Leave Review", noReviews: "No reviews yet",
+                    rating: "Rating", submitReview: "Submit Review", yourName: "Your Name",
+                    yourReview: "Your Review", booking: "Booking", details: "Details",
+                    loading: "Loading...", submit: "Submit", success: "Success!",
+                    email: "Email Address", guests: "Number of Guests",
+                    duration: "Duration", difficulty: "Difficulty", groupSize: "Group Size",
+                    pickup: "Pickup Included", included: "What's Included", bring: "What to Bring"
+                },
+                es: {
+                    title: "Vive el Paraíso", sub: "Las excursiones más exclusivas de República Dominicana",
+                    search: "Buscar aventuras...", book: "Reservar Ahora", date: "Fecha del Viaje",
+                    name: "Nombre Completo", card: "Número de Tarjeta", exp: "Vencimiento (MM/AA)", pay: "Reservar y Pagar",
+                    sTitle: "¡Pago Confirmado!", sBody: "Sus boletos han sido enviados a su correo.",
+                    reviews: "Reseñas", leaveReview: "Dejar Reseña", noReviews: "Aún no hay reseñas",
+                    rating: "Calificación", submitReview: "Enviar Reseña", yourName: "Tu Nombre",
+                    yourReview: "Tu Reseña", booking: "Reserva", details: "Detalles",
+                    loading: "Cargando...", submit: "Enviar", success: "¡Éxito!",
+                    email: "Correo Electrónico", guests: "Número de Invitados",
+                    duration: "Duración", difficulty: "Dificultad", groupSize: "Tamaño del Grupo",
+                    pickup: "Recogida Incluida", included: "Qué Incluye", bring: "Qué Llevar"
+                }
+            };
 
             // --- HELPER FUNCTIONS ---
-            function renderStars(rating) { /* ... as before ... */ }
+            function renderStars(rating) {
+                let stars = '';
+                const fullStars = Math.floor(rating);
+                for (let i = 0; i < 5; i++) {
+                    stars += i < fullStars ? '★' : '☆';
+                }
+                return stars;
+            }
 
             // --- AUTH FUNCTIONS ---
-            async function loadUser() { /* ... as before ... */ }
-            async function loadProfile() { /* ... as before ... */ }
-            function updateUserMenu() { /* ... as before ... */ }
-            window.openAuthModal = function() { /* ... as before ... */ };
-            window.closeAuthModal = function() { /* ... as before ... */ };
-            window.switchAuthTab = function(tab) { /* ... as before ... */ };
-            window.login = async function(e) { /* ... as before ... */ };
-            window.signup = async function(e) { /* ... as before ... */ };
-            window.logout = async function() { /* ... as before ... */ };
+            async function loadUser() {
+                const { data: { user } } = await supabase.auth.getUser();
+                currentUser = user;
+                if (user) {
+                    await loadProfile();
+                }
+                updateUserMenu();
+            }
+
+            async function loadProfile() {
+                if (!currentUser) return;
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+                if (error) {
+                    console.error('Error loading profile:', error);
+                } else {
+                    currentProfile = data;
+                }
+            }
+
+            function updateUserMenu() {
+                const menu = document.getElementById('userMenu');
+                if (currentUser) {
+                    menu.innerHTML = `
+                        <span class="user-email">${currentUser.email}</span>
+                        <a href="profile.html" class="btn-profile">Profile</a>
+                        <button class="btn-logout" onclick="logout()">Logout</button>
+                    `;
+                } else {
+                    menu.innerHTML = `
+                        <button class="btn-auth" onclick="openAuthModal()">Sign Up / Login</button>
+                    `;
+                }
+            }
+
+            window.openAuthModal = function() {
+                document.getElementById('authModal').style.display = 'flex';
+                switchAuthTab('login');
+                document.getElementById('signupForm').style.display = 'block';
+                document.getElementById('signupMessage').style.display = 'none';
+            };
+
+            window.closeAuthModal = function() {
+                document.getElementById('authModal').style.display = 'none';
+            };
+
+            window.switchAuthTab = function(tab) {
+                document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+                document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+                document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+                document.getElementById('signupTab').classList.toggle('active', tab === 'signup');
+            };
+
+            window.login = async function(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    alert('Login error: ' + error.message);
+                } else {
+                    closeAuthModal();
+                    window.location.href = 'profile.html';
+                }
+            };
+
+            window.signup = async function(e) {
+                e.preventDefault();
+
+                const fullName = document.getElementById('signupFullName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+
+                const form = document.getElementById('signupForm');
+                const messageDiv = document.getElementById('signupMessage');
+                form.style.display = 'none';
+                messageDiv.style.display = 'block';
+                messageDiv.innerHTML = '<div class="spinner"></div><p>Creating account...</p>';
+
+                try {
+                    const { data, error } = await supabase.auth.signUp({ 
+                        email, 
+                        password,
+                        options: {
+                            data: { full_name: fullName }
+                        }
+                    });
+
+                    if (error) {
+                        messageDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p><button onclick="window.location.reload()" class="btn-auth">Try Again</button>`;
+                        setTimeout(() => {
+                            form.style.display = 'block';
+                            messageDiv.style.display = 'none';
+                        }, 3000);
+                    } else {
+                        messageDiv.innerHTML = `
+                            <i class="fas fa-check-circle" style="font-size: 50px; color: #4caf50;"></i>
+                            <h3>Sign up successful!</h3>
+                            <p>You will be redirected to the homepage.</p>
+                        `;
+                        setTimeout(() => {
+                            closeAuthModal();
+                            window.location.href = 'index.html';
+                        }, 2000);
+                    }
+                } catch (err) {
+                    messageDiv.innerHTML = `<p style="color: red;">Network error: ${err.message}</p><button onclick="window.location.reload()" class="btn-auth">Try Again</button>`;
+                }
+            };
+
+            window.logout = async function() {
+                await supabase.auth.signOut();
+                currentUser = null;
+                currentProfile = null;
+                updateUserMenu();
+            };
 
             // --- REVIEW FUNCTIONS ---
-            async function loadReviewsForTour(tourId) { /* ... as before ... */ }
-            async function saveReviewToSupabase(reviewData) { /* ... as before ... */ }
+            async function loadReviewsForTour(tourId) {
+                if (!supabase) return [];
+                try {
+                    const { data, error } = await supabase
+                        .from('reviews')
+                        .select('*')
+                        .eq('tour_id', tourId)
+                        .order('created_at', { ascending: false })
+                        .limit(10);
+                    if (error) {
+                        console.error('Error loading reviews:', error);
+                        return [];
+                    }
+                    return data || [];
+                } catch (error) {
+                    console.error('Exception loading reviews:', error);
+                    return [];
+                }
+            }
+
+            async function saveReviewToSupabase(reviewData) {
+                if (!supabase) {
+                    console.error('Supabase not initialized');
+                    return { success: false, error: 'Database not available' };
+                }
+                try {
+                    const insertData = {
+                        tour_id: reviewData.tourId,
+                        user_name: reviewData.name,
+                        rating: reviewData.rating,
+                        review_text: reviewData.text
+                    };
+                    if (currentUser) {
+                        insertData.user_id = currentUser.id;
+                    }
+                    const { data, error } = await supabase
+                        .from('reviews')
+                        .insert([insertData])
+                        .select();
+                    if (error) {
+                        console.error('Supabase insert error:', error);
+                        return { success: false, error: error.message };
+                    }
+                    return { success: true, review: data[0] };
+                } catch (err) {
+                    console.error('Exception during insert:', err);
+                    return { success: false, error: err.message };
+                }
+            }
 
             // --- BOOKING FUNCTIONS ---
             window.updateTotalPrice = function() {
@@ -696,7 +1657,6 @@
                 document.getElementById('totalPriceDisplay').innerText = `$${total.toFixed(2)} USD`;
             };
 
-            // Initialize Stripe Elements after the modal is shown
             function initStripeElements() {
                 if (!cardElement._components) { // not already mounted
                     cardElement.mount('#card-element');
@@ -731,7 +1691,6 @@
                 btn.disabled = true;
 
                 try {
-                    // 1. Create a payment intent via the proxy
                     const response = await fetch(`${PROXY_URL}/api/create-payment-intent`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -750,7 +1709,6 @@
                     const { clientSecret, error: intentError } = await response.json();
                     if (intentError) throw new Error(intentError);
 
-                    // 2. Confirm the payment with Stripe
                     const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
                         payment_method: {
                             card: cardElement,
@@ -762,7 +1720,6 @@
 
                     if (confirmError) throw new Error(confirmError.message);
 
-                    // 3. Payment succeeded – save booking to Supabase
                     const { data, error: bookingError } = await supabase
                         .from('bookings')
                         .insert([
@@ -780,7 +1737,6 @@
 
                     if (bookingError) throw bookingError;
 
-                    // 4. Show success message and close modal
                     document.getElementById('bookingFormContainer').style.display = 'none';
                     document.getElementById('bookingSuccessMsg').style.display = 'block';
                     setTimeout(() => {
@@ -789,15 +1745,11 @@
                         document.getElementById('bookingSuccessMsg').style.display = 'none';
                         btn.innerText = originalText;
                         btn.disabled = false;
-                        // Optionally reset the form
                         document.getElementById('travelDate').value = new Date().toISOString().split('T')[0];
                         document.getElementById('guests').value = '1';
                         document.getElementById('cardholderName').value = '';
                         cardElement.clear();
                     }, 3000);
-
-                    // Optionally, send confirmation email via another function
-                    // await fetch(`${PROXY_URL}/api/send-confirmation`, { ... });
 
                 } catch (err) {
                     alert('Payment error: ' + err.message);
@@ -807,10 +1759,79 @@
             };
 
             // --- LANGUAGE ---
-            function setLang(l) { /* ... as before ... */ }
+            function setLang(l) {
+                lang = l;
+                document.getElementById('en-btn').classList.toggle('active', l === 'en');
+                document.getElementById('es-btn').classList.toggle('active', l === 'es');
+                document.getElementById('hero-title').innerText = i18n[l].title;
+                document.getElementById('hero-sub').innerText = i18n[l].sub;
+                document.getElementById('searchInput').placeholder = i18n[l].search;
+                document.getElementById('lbl-date').innerText = i18n[l].date;
+                document.getElementById('lbl-guests').innerText = i18n[l].guests;
+                document.getElementById('lbl-card').innerText = i18n[l].card;
+                document.getElementById('lbl-exp').innerText = i18n[l].exp;
+                document.getElementById('btn-pay-now').innerText = i18n[l].pay;
+                document.getElementById('msg-success-title').innerText = i18n[l].sTitle;
+                document.getElementById('msg-success-body').innerText = i18n[l].sBody;
+                document.getElementById('tabDetails').innerText = i18n[l].details;
+                document.getElementById('tabBooking').innerText = i18n[l].booking;
+                document.getElementById('tabReviews').innerText = i18n[l].reviews;
+                document.getElementById('lbl-your-name').innerText = i18n[l].yourName;
+                document.getElementById('lbl-rating').innerText = i18n[l].rating;
+                document.getElementById('lbl-your-review').innerText = i18n[l].yourReview;
+                document.getElementById('btn-submit-review').innerText = i18n[l].submitReview;
+                document.getElementById('lbl-duration').innerText = i18n[l].duration;
+                document.getElementById('lbl-difficulty').innerText = i18n[l].difficulty;
+                document.getElementById('lbl-group-size').innerText = i18n[l].groupSize;
+                document.getElementById('lbl-pickup').innerText = i18n[l].pickup;
+                document.getElementById('lbl-included').innerText = i18n[l].included;
+                document.getElementById('lbl-to-bring').innerText = i18n[l].bring;
+                renderTours();
+            }
 
             // --- RENDER TOURS ---
-            async function renderTours(filter = '') { /* ... as before ... */ }
+            async function renderTours(filter = '') {
+                const grid = document.getElementById('toursGrid');
+                const filteredTours = tours.filter(t => t.name[lang].toLowerCase().includes(filter.toLowerCase()));
+
+                let toursHTML = '';
+                filteredTours.forEach(tour => {
+                    toursHTML += `
+                        <div class="card" onclick="openTourDetails(${tour.id})">
+                            <div class="card-img" style="background-image: url('${tour.img}')">
+                                <div class="price-tag">$${tour.price} USD</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">${tour.name[lang]}</h3>
+                                <p class="card-text">${tour.desc[lang]}</p>
+                                <div class="rating">
+                                    <div class="stars" id="rating-stars-${tour.id}">☆☆☆☆☆</div>
+                                    <span class="rating-text" id="rating-text-${tour.id}">Loading...</span>
+                                </div>
+                                <div class="card-buttons">
+                                    <button class="btn-review" onclick="event.stopPropagation(); openTourReviews(${tour.id})">
+                                        <i class="fas fa-star"></i> ${i18n[lang].leaveReview}
+                                    </button>
+                                    <button class="btn-book" onclick="event.stopPropagation(); openTourBooking(${tour.id})">
+                                        ${i18n[lang].book}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = toursHTML;
+
+                filteredTours.forEach(async (tour) => {
+                    const reviews = await loadReviewsForTour(tour.id);
+                    const count = reviews.length;
+                    const avg = count ? (reviews.reduce((sum, r) => sum + r.rating, 0) / count).toFixed(1) : 0;
+                    const starsEl = document.getElementById(`rating-stars-${tour.id}`);
+                    const textEl = document.getElementById(`rating-text-${tour.id}`);
+                    if (starsEl) starsEl.innerText = renderStars(avg);
+                    if (textEl) textEl.innerText = `${avg > 0 ? avg : 'No'} ${count === 1 ? 'review' : 'reviews'}`;
+                });
+            }
 
             // --- MODAL FUNCTIONS ---
             window.openTourDetails = function(tourId) {
@@ -818,7 +1839,59 @@
                 const tour = tours.find(t => t.id === tourId);
                 if (!tour) return;
 
-                // ... (fill details as before) ...
+                document.getElementById('detail-tour-name').innerText = tour.name[lang];
+                document.getElementById('detail-tour-price').innerText = `$${tour.price} USD`;
+                document.getElementById('booking-tour-name').innerText = tour.name[lang];
+                document.getElementById('booking-tour-price').innerText = `$${tour.price}.00 USD`;
+                document.getElementById('review-tour-name').innerText = tour.name[lang];
+
+                if (tour.details && tour.details[lang]) {
+                    const details = tour.details[lang];
+                    document.getElementById('detail-full-description').innerText = details.fullDescription;
+                    document.getElementById('detail-duration').innerText = details.duration;
+                    document.getElementById('detail-difficulty').innerText = details.difficulty;
+                    document.getElementById('detail-group-size').innerText = details.groupSize;
+                    document.getElementById('detail-pickup').innerText = details.pickup;
+
+                    let includedHTML = '';
+                    details.included.forEach(item => {
+                        includedHTML += `<li><i class="fas fa-check"></i> ${item}</li>`;
+                    });
+                    document.getElementById('detail-included').innerHTML = includedHTML;
+
+                    let toBringHTML = '';
+                    details.toBring.forEach(item => {
+                        toBringHTML += `<li><i class="fas fa-suitcase"></i> ${item}</li>`;
+                    });
+                    document.getElementById('detail-to-bring').innerHTML = toBringHTML;
+
+                    let galleryHTML = '';
+                    details.gallery.forEach(img => {
+                        galleryHTML += `<img src="${img}" alt="Tour image">`;
+                    });
+                    document.getElementById('detail-gallery').innerHTML = galleryHTML;
+                } else {
+                    document.getElementById('detail-full-description').innerText = tour.desc[lang];
+                    document.getElementById('detail-duration').innerText = "Full day";
+                    document.getElementById('detail-difficulty').innerText = "Easy";
+                    document.getElementById('detail-group-size').innerText = "Up to 20 people";
+                    document.getElementById('detail-pickup').innerText = "Yes";
+                    document.getElementById('detail-included').innerHTML = `
+                        <li><i class="fas fa-check"></i> Professional guide</li>
+                        <li><i class="fas fa-check"></i> Transportation</li>
+                        <li><i class="fas fa-check"></i> Basic equipment</li>
+                    `;
+                    document.getElementById('detail-to-bring').innerHTML = `
+                        <li><i class="fas fa-suitcase"></i> Sunscreen</li>
+                        <li><i class="fas fa-suitcase"></i> Swimwear</li>
+                        <li><i class="fas fa-suitcase"></i> Camera</li>
+                    `;
+                    document.getElementById('detail-gallery').innerHTML = `
+                        <img src="${tour.img}" alt="Tour image">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400" alt="Tour image">
+                        <img src="https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=400" alt="Tour image">
+                    `;
+                }
 
                 document.getElementById('travelDate').value = new Date().toISOString().split('T')[0];
                 document.getElementById('guests').value = '1';
@@ -827,9 +1900,8 @@
                 document.getElementById('bookingLoginPrompt').style.display = currentUser ? 'none' : 'block';
                 document.getElementById('bookingFormContainer').style.display = currentUser ? 'block' : 'none';
 
-                // Initialize Stripe Elements if user is logged in
                 if (currentUser) {
-                    setTimeout(initStripeElements, 100); // give time for DOM to update
+                    setTimeout(initStripeElements, 100);
                 }
 
                 loadReviewsForTour(tourId).then(reviews => {
@@ -843,17 +1915,132 @@
                 switchTourTab('details');
             };
 
-            window.openTourReviews = async function(tourId) { /* ... as before ... */ };
-            window.openTourBooking = function(tourId) { openTourDetails(tourId); switchTourTab('booking'); };
-            window.switchTourTab = function(tabName) { /* ... as before ... */ };
-            function updateReviewDisplay(reviews) { /* ... as before ... */ }
-            window.submitReview = async function(event) { /* ... as before ... */ };
-            window.filterTours = function() { renderTours(document.getElementById('searchInput').value); };
+            window.openTourReviews = async function(tourId) {
+                currentTourId = tourId;
+                const tour = tours.find(t => t.id === tourId);
+                if (!tour) return;
+                document.getElementById('review-tour-name').innerText = tour.name[lang];
+                const reviews = await loadReviewsForTour(tourId);
+                updateReviewDisplay(reviews);
+                document.getElementById('tourModal').style.display = 'flex';
+                switchTourTab('reviews');
+            };
+
+            window.openTourBooking = function(tourId) {
+                openTourDetails(tourId);
+                switchTourTab('booking');
+            };
+
+            window.switchTourTab = function(tabName) {
+                document.querySelectorAll('#tourModal .tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('#tourModal .tab-content').forEach(content => content.classList.remove('active'));
+                if (tabName === 'details') {
+                    document.getElementById('tabDetails').classList.add('active');
+                    document.getElementById('detailsTab').classList.add('active');
+                } else if (tabName === 'booking') {
+                    document.getElementById('tabBooking').classList.add('active');
+                    document.getElementById('bookingTab').classList.add('active');
+                } else {
+                    document.getElementById('tabReviews').classList.add('active');
+                    document.getElementById('reviewsTab').classList.add('active');
+                }
+            };
+
+            function updateReviewDisplay(reviews) {
+                const container = document.getElementById('reviewsList');
+                container.innerHTML = '';
+
+                if (!reviews || reviews.length === 0) {
+                    container.innerHTML = `<div class="no-reviews">${i18n[lang].noReviews}</div>`;
+                    document.getElementById('modal-rating-stars').innerHTML = '☆☆☆☆☆';
+                    document.getElementById('modal-rating-text').innerText = '(0 reviews)';
+                    return;
+                }
+
+                const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+                document.getElementById('modal-rating-stars').innerHTML = renderStars(avg);
+                document.getElementById('modal-rating-text').innerText = `(${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'})`;
+
+                reviews.forEach(r => {
+                    const date = new Date(r.created_at).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
+                        year: 'numeric', month: 'short', day: 'numeric'
+                    });
+                    container.innerHTML += `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <span class="review-name">${r.user_name}</span>
+                                <span class="review-date">${date}</span>
+                            </div>
+                            <div class="stars">${renderStars(r.rating)}</div>
+                            <p class="review-text">${r.review_text}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            window.submitReview = async function(event) {
+                event.preventDefault();
+
+                const name = document.getElementById('reviewerName').value;
+                const rating = document.querySelector('input[name="rating"]:checked');
+                const text = document.getElementById('reviewText').value;
+
+                if (!rating) {
+                    alert('Please select a rating');
+                    return;
+                }
+
+                const btn = document.getElementById('btn-submit-review');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + i18n[lang].loading;
+                btn.disabled = true;
+
+                const result = await saveReviewToSupabase({
+                    tourId: currentTourId,
+                    name: name,
+                    rating: parseInt(rating.value),
+                    text: text
+                });
+
+                if (result.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> ' + i18n[lang].success;
+
+                    document.getElementById('reviewerName').value = '';
+                    document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+                    document.getElementById('reviewText').value = '';
+
+                    const updatedReviews = await loadReviewsForTour(currentTourId);
+                    updateReviewDisplay(updatedReviews);
+
+                    const count = updatedReviews.length;
+                    const avg = count ? (updatedReviews.reduce((s, r) => s + r.rating, 0) / count).toFixed(1) : 0;
+                    const starsEl = document.getElementById(`rating-stars-${currentTourId}`);
+                    const textEl = document.getElementById(`rating-text-${currentTourId}`);
+                    if (starsEl) starsEl.innerText = renderStars(avg);
+                    if (textEl) textEl.innerText = `${avg > 0 ? avg : 'No'} ${count === 1 ? 'review' : 'reviews'}`;
+
+                    document.getElementById('detail-rating-stars').innerHTML = renderStars(avg);
+                    document.getElementById('detail-rating-text').innerText = `(${count} ${count === 1 ? 'review' : 'reviews'})`;
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }, 2000);
+                } else {
+                    alert('Error submitting review: ' + (result.error || 'Unknown error'));
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            };
+
+            window.filterTours = function() {
+                renderTours(document.getElementById('searchInput').value);
+            };
+
             window.closeTourModal = function() {
                 document.getElementById('tourModal').style.display = 'none';
                 currentTourId = null;
-                // Optionally unmount Stripe element to avoid memory leaks
-                cardElement.unmount();
+                if (cardElement) cardElement.unmount();
             };
 
             window.onclick = (e) => { 
