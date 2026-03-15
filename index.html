@@ -648,14 +648,14 @@
             
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // --- STRIPE CONFIGURATION (your live key inserted) ---
+            // --- STRIPE CONFIGURATION (your live key) ---
             const STRIPE_PUBLISHABLE_KEY = 'pk_live_Z3DOEXDkQ29anfNUNNsk2XNb';
             const PROXY_URL = 'https://your-vercel-project.vercel.app'; // 👈 REPLACE THIS with your deployed proxy URL
 
-            // Initialize Stripe safely – if it fails, the rest of the page still works
+            // Initialize Stripe safely
             let stripe, elements, cardElement;
             try {
-                if (STRIPE_PUBLISHABLE_KEY && STRIPE_PUBLISHABLE_KEY !== 'pk_test_your_publishable_key') {
+                if (STRIPE_PUBLISHABLE_KEY) {
                     stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
                     elements = stripe.elements();
                     cardElement = elements.create('card', { style: { base: { fontSize: '16px' } } });
