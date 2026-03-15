@@ -10,7 +10,7 @@
     // --- STRIPE CONFIGURATION ---
     const STRIPE_PUBLISHABLE_KEY = 'pk_live_Z3DOEXDkQ29anfNUNNsk2XNb';
     // 👇 IMPORTANT: Replace with your actual Vercel project URL (e.g., https://your-project.vercel.app)
-    const PROXY_URL = 'https://your-vercel-project.vercel.app'; // <-- CHANGE THIS
+    const PROXY_URL = 'https://supremevip-6ivrsba2w-christiantelemaque-bytes-projects.vercel.app'; // <-- CHANGE THIS
 
     // Initialize Stripe safely
     let stripe, elements, cardElement;
