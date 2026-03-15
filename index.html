@@ -468,13 +468,13 @@
 
     <script>
         (function() {
-            // --- SUPABASE CONFIGURATION ---
+            // --- SUPABASE CONFIGURATION (using publishable key) ---
             const SUPABASE_URL = 'https://iitvetxbqdtkxiyowbp.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpdHZldHhicWR1dGt4aXlvd2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MDQ4NTksImV4cCI6MjA4ODk4MDg1OX0.hyf2vfgJT-ISijzaklpouO-VBrfBcQDosp890pztEc4';
+            const SUPABASE_ANON_KEY = 'sb_publishable_lmp0WexjNauoHELEFo9H8g_RFbOKuRU';
             
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // --- FULL TOURS DATA (23 excursions) – THIS IS THE WORKING ARRAY ---
+            // --- FULL TOURS DATA (23 excursions) – same working array ---
             const tours = [
                 { 
                     id: 1, 
@@ -1366,18 +1366,22 @@
                 const fullName = document.getElementById('signupFullName').value;
                 const email = document.getElementById('signupEmail').value;
                 const password = document.getElementById('signupPassword').value;
-                const { error } = await supabase.auth.signUp({ 
-                    email, 
-                    password,
-                    options: {
-                        data: { full_name: fullName }
+                try {
+                    const { data, error } = await supabase.auth.signUp({ 
+                        email, 
+                        password,
+                        options: {
+                            data: { full_name: fullName }
+                        }
+                    });
+                    if (error) {
+                        alert('Sign up error: ' + error.message + (error.status ? ' (status: ' + error.status + ')' : ''));
+                    } else {
+                        alert('Sign up successful! Please check your email for confirmation (if enabled).');
+                        closeAuthModal();
                     }
-                });
-                if (error) {
-                    alert('Sign up error: ' + error.message);
-                } else {
-                    alert('Sign up successful! Please check your email for confirmation (if enabled).');
-                    closeAuthModal();
+                } catch (err) {
+                    alert('Unexpected error: ' + err.message);
                 }
             };
 
@@ -1939,4 +1943,4 @@
         })();
     </script>
 </body>
-    </html>
+        </html>
