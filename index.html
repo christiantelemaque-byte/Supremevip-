@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        /* (All your existing styles – kept exactly as before) */
+        /* (Keep all your existing styles – they are unchanged and working) */
         :root {
             --primary: #00897b;
             --primary-dark: #00695c;
@@ -650,12 +650,21 @@
 
             // --- STRIPE CONFIGURATION (replace with your publishable key) ---
             const STRIPE_PUBLISHABLE_KEY = 'pk_test_your_publishable_key'; // 👈 REPLACE THIS
-            const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-            const elements = stripe.elements();
-            const cardElement = elements.create('card', { style: { base: { fontSize: '16px' } } });
-            
-            // --- PROXY URL (replace with your Vercel proxy URL) ---
             const PROXY_URL = 'https://your-proxy.vercel.app'; // 👈 REPLACE THIS
+
+            // Initialize Stripe safely – if it fails, the rest of the page still works
+            let stripe, elements, cardElement;
+            try {
+                if (STRIPE_PUBLISHABLE_KEY && STRIPE_PUBLISHABLE_KEY !== 'pk_test_your_publishable_key') {
+                    stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+                    elements = stripe.elements();
+                    cardElement = elements.create('card', { style: { base: { fontSize: '16px' } } });
+                } else {
+                    console.warn('Stripe publishable key not set – payment will be disabled.');
+                }
+            } catch (e) {
+                console.error('Failed to initialize Stripe:', e);
+            }
 
             // ========== FULL TOURS ARRAY (23 excursions) ==========
             const tours = [
@@ -1658,7 +1667,7 @@
             };
 
             function initStripeElements() {
-                if (!cardElement._components) { // not already mounted
+                if (stripe && elements && cardElement && !cardElement._components) {
                     cardElement.mount('#card-element');
                     cardElement.on('change', ({ error }) => {
                         const displayError = document.getElementById('card-errors');
@@ -1676,6 +1685,11 @@
                 if (!currentUser) {
                     alert('You must be logged in to book.');
                     openAuthModal();
+                    return;
+                }
+
+                if (!stripe || !cardElement) {
+                    alert('Payment system is not configured. Please try again later.');
                     return;
                 }
 
@@ -1748,7 +1762,7 @@
                         document.getElementById('travelDate').value = new Date().toISOString().split('T')[0];
                         document.getElementById('guests').value = '1';
                         document.getElementById('cardholderName').value = '';
-                        cardElement.clear();
+                        if (cardElement) cardElement.clear();
                     }, 3000);
 
                 } catch (err) {
