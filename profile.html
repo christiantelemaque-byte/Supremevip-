@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Supreme VIP JCZ Tours</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Reuse styles from index or add new ones */
+        :root {
+            --primary: #00897b;
+            --primary-dark: #00695c;
+            --accent: #ffb300;
+            --bg: #f8f9fa;
+            --text: #2c3e50;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+        header {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+        .nav-links a {
+            color: var(--primary);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        .profile-info h2 { color: var(--primary-dark); margin-bottom: 5px; }
+        .profile-info p { color: #666; }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .profile-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .profile-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .profile-item-details { flex: 1; }
+        .profile-item-title { font-weight: bold; color: var(--primary-dark); }
+        .profile-item-meta { font-size: 0.85rem; color: #666; }
+        .profile-review-text { font-style: italic; margin: 5px 0; }
+        .no-items { text-align: center; padding: 20px; color: #999; font-style: italic; }
+        .btn-logout {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-logout:hover { background: #d32f2f; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Supreme<span>VIP</span> JCZ</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="profile-header" id="profileHeader"></div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('bookings')">My Bookings</div>
+            <div class="tab" onclick="switchTab('reviews')">My Reviews</div>
+        </div>
+
+        <div id="bookingsTab" class="tab-content active">
+            <div id="bookingsList"></div>
+        </div>
+        <div id="reviewsTab" class="tab-content">
+            <div id="reviewsList"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const SUPABASE_URL = 'https://iitvetxbqdtkxiyowbp.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpdHZldHhicWR1dGt4aXlvd2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MDQ4NTksImV4cCI6MjA4ODk4MDg1OX0.hyf2vfgJT-ISijzaklpouO-VBrfBcQDosp890pztEc4';
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // Tours data (needed for tour images) – copy your full tours array here
+            const tours = [ /* ... your full 23‑item tours array ... */ ];
+
+            let currentUser = null;
+            let currentProfile = null;
+
+            async function loadUser() {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    // Not logged in, redirect to home
+                    window.location.href = 'index.html';
+                    return;
+                }
+                currentUser = user;
+                await loadProfile();
+                updateProfileHeader();
+                await loadUserBookings();
+                await loadUserReviews();
+            }
+
+            async function loadProfile() {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+                if (error) console.error('Error loading profile:', error);
+                else currentProfile = data;
+            }
+
+            function updateProfileHeader() {
+                const header = document.getElementById('profileHeader');
+                if (!currentProfile) {
+                    header.innerHTML = `
+                        <div class="profile-avatar">?</div>
+                        <div class="profile-info">
+                            <h2>${currentUser.email}</h2>
+                            <p>No additional info</p>
+                        </div>
+                    `;
+                    return;
+                }
+                const initial = currentProfile.full_name ? currentProfile.full_name.charAt(0).toUpperCase() : '?';
+                header.innerHTML = `
+                    <div class="profile-avatar">${initial}</div>
+                    <div class="profile-info">
+                        <h2>${currentProfile.full_name || 'No name'}</h2>
+                        <p>Email: ${currentProfile.email || currentUser.email}</p>
+                        <p>Member since: ${new Date(currentUser.created_at).toLocaleDateString()}</p>
+                    </div>
+                `;
+            }
+
+            async function loadUserBookings() {
+                const { data: bookings, error } = await supabase
+                    .from('bookings')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                const list = document.getElementById('bookingsList');
+                if (error || !bookings || bookings.length === 0) {
+                    list.innerHTML = '<p class="no-items">No bookings yet.</p>';
+                    return;
+                }
+
+                let html = '';
+                bookings.forEach(b => {
+                    const tour = tours.find(t => t.id === b.tour_id);
+                    if (!tour) return;
+                    html += `
+                        <div class="profile-item">
+                            <img src="${tour.img}" alt="${tour.name.en}">
+                            <div class="profile-item-details">
+                                <div class="profile-item-title">${tour.name.en}</div>
+                                <div class="profile-item-meta">Date: ${new Date(b.booking_date).toLocaleDateString()}</div>
+                                <div class="profile-item-meta">Guests: ${b.guests}</div>
+                                <div class="profile-item-meta">Total: $${b.total_price}</div>
+                                <div class="profile-item-meta">Status: ${b.payment_status}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                list.innerHTML = html;
+            }
+
+            async function loadUserReviews() {
+                const { data: reviews, error } = await supabase
+                    .from('reviews')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                const list = document.getElementById('reviewsList');
+                if (error || !reviews || reviews.length === 0) {
+                    list.innerHTML = '<p class="no-items">You haven\'t written any reviews yet.</p>';
+                    return;
+                }
+
+                function renderStars(rating) {
+                    let stars = '';
+                    for (let i = 0; i < 5; i++) stars += i < rating ? '★' : '☆';
+                    return stars;
+                }
+
+                let html = '';
+                reviews.forEach(r => {
+                    const tour = tours.find(t => t.id === r.tour_id);
+                    if (!tour) return;
+                    html += `
+                        <div class="profile-item">
+                            <img src="${tour.img}" alt="${tour.name.en}">
+                            <div class="profile-item-details">
+                                <div class="profile-item-title">${tour.name.en}</div>
+                                <div class="stars">${renderStars(r.rating)}</div>
+                                <div class="profile-review-text">"${r.review_text}"</div>
+                                <div class="profile-item-meta">${new Date(r.created_at).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                list.innerHTML = html;
+            }
+
+            window.switchTab = function(tab) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                if (tab === 'bookings') {
+                    document.querySelector('.tab:first-child').classList.add('active');
+                    document.getElementById('bookingsTab').classList.add('active');
+                } else {
+                    document.querySelector('.tab:last-child').classList.add('active');
+                    document.getElementById('reviewsTab').classList.add('active');
+                }
+            };
+
+            window.logout = async function() {
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            };
+
+            loadUser();
+        })();
+    </script>
+</body>
+</html>
