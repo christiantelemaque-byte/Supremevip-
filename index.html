@@ -1,8 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supreme VIP JCZ Tours | Dominican Republic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #00897b;
+            --primary-dark: #00695c;
+            --accent: #ffb300;
+            --bg: #f8f9fa;
+            --text: #2c3e50;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+
+        header {
+            background: var(--white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+        
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .lang-btn {
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .lang-btn.active { background: var(--primary); color: var(--white); }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-email {
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+        .btn-auth, .btn-profile {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .btn-auth:hover, .btn-profile:hover { background: var(--primary-dark); }
+        .btn-logout {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .btn-logout:hover { background: #d32f2f; }
+
+        /* Profile modal styles (removed – now using separate page) */
+
+        .hero {
+            height: 50vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+
+        .search-section {
+            background: var(--primary);
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: none;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            outline: none;
+        }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .card:hover { transform: translateY(-10px); }
+        .card-img { height: 200px; background-size: cover; background-position: center; position: relative; }
+        .price-tag {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
+        .card-text { font-size: 0.9rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .stars {
+            color: #ffb300;
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+        .rating-text {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .card-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+        .btn-review {
+            background: #f0f0f0;
+            color: var(--text);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            flex: 1;
+        }
+        .btn-review:hover { background: #e0e0e0; }
+        
+        .btn-book {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            flex: 1;
+        }
+        .btn-book:hover { background: var(--primary-dark); }
+
+        /* Modals (auth modal only) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 95%;
+            max-width: 500px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #666; }
+        .close:hover { color: #000; }
+        
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .auth-form .form-group {
+            margin-bottom: 15px;
+        }
+        .auth-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .btn-auth-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .auth-switch {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .auth-switch span {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Tour modal styles (unchanged) */
+        .modal-lg { max-width: 800px; }
+        .tour-details { display: flex; flex-direction: column; gap: 20px; }
+        .detail-header { display: flex; justify-content: space-between; align-items: start; }
+        .detail-title { font-size: 1.8rem; color: var(--primary-dark); }
+        .detail-price { font-size: 1.5rem; color: var(--accent); font-weight: bold; }
+        .detail-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .detail-gallery img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .detail-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .info-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .info-label { font-weight: bold; color: var(--primary); margin-bottom: 5px; font-size: 0.9rem; }
+        .info-value { font-size: 0.95rem; }
+        .included-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .included-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .included-list li i {
+            color: #4caf50;
+            margin-right: 10px;
+        }
+        .checkout-header { border-bottom: 1px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+        .cc-row { display: flex; gap: 10px; }
+        .btn-pay {
+            background: var(--accent);
+            color: #000;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .success-overlay { display: none; text-align: center; padding: 20px; }
+        .success-overlay i { font-size: 50px; color: #4caf50; margin-bottom: 15px; }
+        .reviews-container { margin-top: 20px; }
+        .review-item { 
+            padding: 15px; 
+            border-bottom: 1px solid #eee; 
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .review-header { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 8px; 
+            align-items: center;
+        }
+        .review-name { font-weight: bold; color: var(--primary-dark); }
+        .review-date { font-size: 0.8rem; color: #999; }
+        .review-text { font-size: 0.9rem; line-height: 1.5; }
+        .review-form { 
+            background: #f5f5f5; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-top: 20px;
+        }
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            margin: 10px 0;
+        }
+        .star-rating input { display: none; }
+        .star-rating label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ddd;
+            margin-right: 5px;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffb300;
+        }
+        .review-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            margin: 10px 0;
+            font-family: inherit;
+        }
+        .btn-submit-review {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-submit-review:hover { background: var(--primary-dark); }
+        .no-reviews { text-align: center; padding: 20px; color: #999; font-style: italic; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            header { flex-direction: column; gap: 10px; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .modal-content { padding: 20px; }
+            .detail-gallery { grid-template-columns: repeat(2, 1fr); }
+            .card-buttons { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
+
     <header>
         <div class="logo">Supreme<span>VIP</span> JCZ</div>
         <div class="nav-btns">
@@ -14,18 +429,237 @@
         </div>
     </header>
 
-    ... (rest of the page unchanged until the script) ...
+    <section class="hero">
+        <h1 id="hero-title">Experience Paradise</h1>
+        <p id="hero-sub">The most exclusive excursions in the Dominican Republic</p>
+    </section>
+
+    <div class="search-section">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search adventures..." onkeyup="filterTours()">
+    </div>
+
+    <div class="container">
+        <div class="grid" id="toursGrid"></div>
+    </div>
+
+    <!-- Auth Modal (Sign Up / Login) -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <div class="modal-tabs">
+                <button class="tab-btn active" onclick="switchAuthTab('login')" id="tabLogin">Login</button>
+                <button class="tab-btn" onclick="switchAuthTab('signup')" id="tabSignup">Sign Up</button>
+            </div>
+            <div id="loginTab" class="tab-content active">
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn-auth-submit">Login</button>
+                </form>
+            </div>
+            <div id="signupTab" class="tab-content">
+                <form onsubmit="signup(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupFullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" required>
+                    </div>
+                    <button type="submit" class="btn-auth-submit">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Details/Booking/Reviews Modal -->
+    <div class="modal" id="tourModal">
+        <div class="modal-content modal-lg">
+            <span class="close" onclick="closeTourModal()">&times;</span>
+            <div class="modal-tabs">
+                <button class="tab-btn active" onclick="switchTourTab('details')" id="tabDetails">Details</button>
+                <button class="tab-btn" onclick="switchTourTab('booking')" id="tabBooking">Booking</button>
+                <button class="tab-btn" onclick="switchTourTab('reviews')" id="tabReviews">Reviews</button>
+            </div>
+            
+            <!-- Details Tab -->
+            <div id="detailsTab" class="tab-content active">
+                <div class="tour-details">
+                    <div class="detail-header">
+                        <h2 class="detail-title" id="detail-tour-name">Tour Name</h2>
+                        <div class="detail-price" id="detail-tour-price">$0 USD</div>
+                    </div>
+                    
+                    <div class="rating">
+                        <div class="stars" id="detail-rating-stars">★★★★★</div>
+                        <span class="rating-text" id="detail-rating-text">(0 reviews)</span>
+                    </div>
+                    
+                    <p id="detail-full-description">Full description of the tour...</p>
+                    
+                    <div class="detail-gallery" id="detail-gallery">
+                        <!-- Gallery images will be loaded here -->
+                    </div>
+                    
+                    <div class="detail-info">
+                        <div class="info-item">
+                            <div class="info-label" id="lbl-duration">Duration</div>
+                            <div class="info-value" id="detail-duration">8 hours</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label" id="lbl-difficulty">Difficulty</div>
+                            <div class="info-value" id="detail-difficulty">Easy</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label" id="lbl-group-size">Group Size</div>
+                            <div class="info-value" id="detail-group-size">Up to 20 people</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label" id="lbl-pickup">Pickup Included</div>
+                            <div class="info-value" id="detail-pickup">Yes</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 id="lbl-included">What's Included</h3>
+                        <ul class="included-list" id="detail-included">
+                            <!-- Included items will be loaded here -->
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 id="lbl-to-bring">What to Bring</h3>
+                        <ul class="included-list" id="detail-to-bring">
+                            <!-- To bring items will be loaded here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Tab -->
+            <div id="bookingTab" class="tab-content">
+                <div class="checkout-header">
+                    <h2>Book: <span id="booking-tour-name">Tour Name</span></h2>
+                    <p id="booking-tour-price" style="color: var(--primary); font-weight: bold;"></p>
+                </div>
+                <div id="bookingLoginPrompt" style="display: none; text-align: center; padding: 20px;">
+                    <p>Please <a href="#" onclick="openAuthModal(); return false;">log in</a> to book this tour.</p>
+                </div>
+                <div id="bookingFormContainer" style="display: none;">
+                    <form onsubmit="processBooking(event)">
+                        <div class="form-group">
+                            <label id="lbl-date">Travel Date</label>
+                            <input type="date" class="form-control" id="travelDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="lbl-guests">Number of Guests</label>
+                            <select class="form-control" id="guests" required onchange="updateTotalPrice()">
+                                <option value="1">1 Guest</option>
+                                <option value="2">2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="5">5 Guests</option>
+                                <option value="6">6 Guests</option>
+                                <option value="7">7 Guests</option>
+                                <option value="8">8+ Guests</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Price</label>
+                            <div class="form-control" id="totalPriceDisplay" style="background: #f0f0f0;">$0.00</div>
+                        </div>
+                        <div class="form-group">
+                            <label id="lbl-card">Card Number</label>
+                            <input type="text" class="form-control" placeholder="1234 5678 9101 1121" maxlength="19" id="cardNumber" required>
+                        </div>
+                        <div class="cc-row">
+                            <div class="form-group" style="flex:2">
+                                <label id="lbl-exp">Expiry (MM/YY)</label>
+                                <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" id="cardExpiry" required>
+                            </div>
+                            <div class="form-group" style="flex:1">
+                                <label>CVV</label>
+                                <input type="text" class="form-control" placeholder="123" maxlength="3" id="cardCVV" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-pay" id="btn-pay-now">Pay Now</button>
+                    </form>
+                </div>
+                <div id="bookingSuccessMsg" class="success-overlay">
+                    <i class="fas fa-check-circle"></i>
+                    <h2 id="msg-success-title">Booking Confirmed!</h2>
+                    <p id="msg-success-body">Your booking has been confirmed. Check your email for details.</p>
+                </div>
+            </div>
+            
+            <!-- Reviews Tab -->
+            <div id="reviewsTab" class="tab-content">
+                <div class="checkout-header">
+                    <h2>Reviews for <span id="review-tour-name">Tour Name</span></h2>
+                    <div class="rating">
+                        <div class="stars" id="modal-rating-stars"></div>
+                        <span class="rating-text" id="modal-rating-text">(0 reviews)</span>
+                    </div>
+                </div>
+                
+                <div class="reviews-container" id="reviewsList">
+                    <div class="no-reviews">No reviews yet. Be the first to review!</div>
+                </div>
+                
+                <div class="review-form">
+                    <h3>Leave a Review</h3>
+                    <form onsubmit="submitReview(event)">
+                        <div class="form-group">
+                            <label id="lbl-your-name">Your Name</label>
+                            <input type="text" class="form-control" id="reviewerName" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="lbl-rating">Rating</label>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5">
+                                <label for="star5">★</label>
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4">★</label>
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3">★</label>
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" required>
+                                <label for="star1">★</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label id="lbl-your-review">Your Review</label>
+                            <textarea class="review-textarea" id="reviewText" placeholder="Share your experience..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit-review" id="btn-submit-review">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         (function() {
             // --- SUPABASE CONFIGURATION ---
             const SUPABASE_URL = 'https://iitvetxbqdtkxiyowbp.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // your key
-
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpdHZldHhicWR1dGt4aXlvd2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MDQ4NTksImV4cCI6MjA4ODk4MDg1OX0.hyf2vfgJT-ISijzaklpouO-VBrfBcQDosp890pztEc4';
+            
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // --- TOURS ARRAY (keep your full array) ---
-            const tours = [ /* ... your full tours array ... */ ];
+            // ========== FULL TOURS ARRAY (23 excursions – INSERT YOUR FULL ARRAY HERE) ==========
+            const tours = [ /* ... your full 23‑item tours array ... */ ];
 
             // --- GLOBAL VARIABLES ---
             let lang = 'en';
@@ -33,10 +667,44 @@
             let currentUser = null;
             let currentProfile = null;
 
-            const i18n = { /* ... your i18n object ... */ };
+            const i18n = {
+                en: {
+                    title: "Experience Paradise", sub: "The most exclusive excursions in the Dominican Republic",
+                    search: "Search adventures...", book: "Book Now", date: "Travel Date",
+                    name: "Full Name", card: "Card Number", exp: "Expiry (MM/YY)", pay: "Book & Pay Now",
+                    sTitle: "Payment Confirmed!", sBody: "Your tickets have been sent to your email.",
+                    reviews: "Reviews", leaveReview: "Leave Review", noReviews: "No reviews yet",
+                    rating: "Rating", submitReview: "Submit Review", yourName: "Your Name",
+                    yourReview: "Your Review", booking: "Booking", details: "Details",
+                    loading: "Loading...", submit: "Submit", success: "Success!",
+                    email: "Email Address", guests: "Number of Guests",
+                    duration: "Duration", difficulty: "Difficulty", groupSize: "Group Size",
+                    pickup: "Pickup Included", included: "What's Included", bring: "What to Bring"
+                },
+                es: {
+                    title: "Vive el Paraíso", sub: "Las excursiones más exclusivas de República Dominicana",
+                    search: "Buscar aventuras...", book: "Reservar Ahora", date: "Fecha del Viaje",
+                    name: "Nombre Completo", card: "Número de Tarjeta", exp: "Vencimiento (MM/AA)", pay: "Reservar y Pagar",
+                    sTitle: "¡Pago Confirmado!", sBody: "Sus boletos han sido enviados a su correo.",
+                    reviews: "Reseñas", leaveReview: "Dejar Reseña", noReviews: "Aún no hay reseñas",
+                    rating: "Calificación", submitReview: "Enviar Reseña", yourName: "Tu Nombre",
+                    yourReview: "Tu Reseña", booking: "Reserva", details: "Detalles",
+                    loading: "Cargando...", submit: "Enviar", success: "¡Éxito!",
+                    email: "Correo Electrónico", guests: "Número de Invitados",
+                    duration: "Duración", difficulty: "Dificultad", groupSize: "Tamaño del Grupo",
+                    pickup: "Recogida Incluida", included: "Qué Incluye", bring: "Qué Llevar"
+                }
+            };
 
             // --- HELPER FUNCTIONS ---
-            function renderStars(rating) { /* ... */ }
+            function renderStars(rating) {
+                let stars = '';
+                const fullStars = Math.floor(rating);
+                for (let i = 0; i < 5; i++) {
+                    stars += i < fullStars ? '★' : '☆';
+                }
+                return stars;
+            }
 
             // --- AUTH FUNCTIONS ---
             async function loadUser() {
@@ -65,7 +733,6 @@
             function updateUserMenu() {
                 const menu = document.getElementById('userMenu');
                 if (currentUser) {
-                    // Show link to profile page instead of modal button
                     menu.innerHTML = `
                         <span class="user-email">${currentUser.email}</span>
                         <a href="profile.html" class="btn-profile">Profile</a>
@@ -78,9 +745,21 @@
                 }
             }
 
-            window.openAuthModal = function() { /* ... unchanged ... */ };
-            window.closeAuthModal = function() { /* ... unchanged ... */ };
-            window.switchAuthTab = function(tab) { /* ... unchanged ... */ };
+            window.openAuthModal = function() {
+                document.getElementById('authModal').style.display = 'flex';
+                switchAuthTab('login');
+            };
+
+            window.closeAuthModal = function() {
+                document.getElementById('authModal').style.display = 'none';
+            };
+
+            window.switchAuthTab = function(tab) {
+                document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+                document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+                document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+                document.getElementById('signupTab').classList.toggle('active', tab === 'signup');
+            };
 
             window.login = async function(e) {
                 e.preventDefault();
@@ -91,7 +770,7 @@
                     alert('Login error: ' + error.message);
                 } else {
                     closeAuthModal();
-                    // Redirect to profile page after login
+                    // Redirect to profile page after successful login
                     window.location.href = 'profile.html';
                 }
             };
@@ -121,32 +800,402 @@
                 currentUser = null;
                 currentProfile = null;
                 updateUserMenu();
-                // Stay on index
             };
 
-            // --- REVIEW FUNCTIONS (unchanged) ---
-            async function loadReviewsForTour(tourId) { /* ... */ }
-            async function saveReviewToSupabase(reviewData) { /* ... */ }
+            // --- REVIEW FUNCTIONS ---
+            async function loadReviewsForTour(tourId) {
+                if (!supabase) return [];
+                try {
+                    const { data, error } = await supabase
+                        .from('reviews')
+                        .select('*')
+                        .eq('tour_id', tourId)
+                        .order('created_at', { ascending: false })
+                        .limit(10);
+                    if (error) {
+                        console.error('Error loading reviews:', error);
+                        return [];
+                    }
+                    return data || [];
+                } catch (error) {
+                    console.error('Exception loading reviews:', error);
+                    return [];
+                }
+            }
 
-            // --- BOOKING FUNCTIONS (unchanged) ---
-            window.updateTotalPrice = function() { /* ... */ };
-            window.processBooking = async function(e) { /* ... */ };
+            async function saveReviewToSupabase(reviewData) {
+                if (!supabase) {
+                    console.error('Supabase not initialized');
+                    return { success: false, error: 'Database not available' };
+                }
+                try {
+                    const insertData = {
+                        tour_id: reviewData.tourId,
+                        user_name: reviewData.name,
+                        rating: reviewData.rating,
+                        review_text: reviewData.text
+                    };
+                    if (currentUser) {
+                        insertData.user_id = currentUser.id;
+                    }
+                    const { data, error } = await supabase
+                        .from('reviews')
+                        .insert([insertData])
+                        .select();
+                    if (error) {
+                        console.error('Supabase insert error:', error);
+                        return { success: false, error: error.message };
+                    }
+                    return { success: true, review: data[0] };
+                } catch (err) {
+                    console.error('Exception during insert:', err);
+                    return { success: false, error: err.message };
+                }
+            }
 
-            // --- LANGUAGE (unchanged) ---
-            function setLang(l) { /* ... */ }
+            // --- BOOKING FUNCTIONS ---
+            window.updateTotalPrice = function() {
+                const tour = tours.find(t => t.id === currentTourId);
+                if (!tour) return;
+                const guests = parseInt(document.getElementById('guests').value) || 1;
+                const total = tour.price * guests;
+                document.getElementById('totalPriceDisplay').innerText = `$${total.toFixed(2)} USD`;
+            };
 
-            // --- RENDER TOURS (unchanged) ---
-            async function renderTours(filter = '') { /* ... */ }
+            window.processBooking = async function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    alert('You must be logged in to book.');
+                    openAuthModal();
+                    return;
+                }
 
-            // --- MODAL FUNCTIONS (unchanged) ---
-            window.openTourDetails = function(tourId) { /* ... */ };
-            window.openTourReviews = async function(tourId) { /* ... */ };
-            window.openTourBooking = function(tourId) { /* ... */ };
-            window.switchTourTab = function(tabName) { /* ... */ };
-            function updateReviewDisplay(reviews) { /* ... */ }
-            window.submitReview = async function(event) { /* ... */ };
-            window.filterTours = function() { renderTours(document.getElementById('searchInput').value); };
-            window.closeTourModal = function() { document.getElementById('tourModal').style.display = 'none'; currentTourId = null; };
+                const tour = tours.find(t => t.id === currentTourId);
+                const guests = parseInt(document.getElementById('guests').value);
+                const date = document.getElementById('travelDate').value;
+                const totalPrice = tour.price * guests;
+
+                const { data, error } = await supabase
+                    .from('bookings')
+                    .insert([
+                        {
+                            user_id: currentUser.id,
+                            tour_id: currentTourId,
+                            booking_date: date,
+                            guests: guests,
+                            total_price: totalPrice,
+                            payment_status: 'pending'
+                        }
+                    ])
+                    .select();
+
+                if (error) {
+                    alert('Booking error: ' + error.message);
+                    return;
+                }
+
+                const btn = document.getElementById('btn-pay-now');
+                const originalText = btn.innerText;
+                btn.innerText = i18n[lang].loading + "...";
+                btn.disabled = true;
+
+                setTimeout(async () => {
+                    await supabase
+                        .from('bookings')
+                        .update({ payment_status: 'paid' })
+                        .eq('id', data[0].id);
+
+                    document.getElementById('bookingFormContainer').style.display = 'none';
+                    document.getElementById('bookingSuccessMsg').style.display = 'block';
+                    setTimeout(() => {
+                        closeTourModal();
+                        document.getElementById('bookingFormContainer').style.display = 'block';
+                        document.getElementById('bookingSuccessMsg').style.display = 'none';
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }, 3000);
+                }, 1500);
+            };
+
+            // --- LANGUAGE ---
+            function setLang(l) {
+                lang = l;
+                document.getElementById('en-btn').classList.toggle('active', l === 'en');
+                document.getElementById('es-btn').classList.toggle('active', l === 'es');
+                document.getElementById('hero-title').innerText = i18n[l].title;
+                document.getElementById('hero-sub').innerText = i18n[l].sub;
+                document.getElementById('searchInput').placeholder = i18n[l].search;
+                document.getElementById('lbl-date').innerText = i18n[l].date;
+                document.getElementById('lbl-guests').innerText = i18n[l].guests;
+                document.getElementById('lbl-card').innerText = i18n[l].card;
+                document.getElementById('lbl-exp').innerText = i18n[l].exp;
+                document.getElementById('btn-pay-now').innerText = i18n[l].pay;
+                document.getElementById('msg-success-title').innerText = i18n[l].sTitle;
+                document.getElementById('msg-success-body').innerText = i18n[l].sBody;
+                document.getElementById('tabDetails').innerText = i18n[l].details;
+                document.getElementById('tabBooking').innerText = i18n[l].booking;
+                document.getElementById('tabReviews').innerText = i18n[l].reviews;
+                document.getElementById('lbl-your-name').innerText = i18n[l].yourName;
+                document.getElementById('lbl-rating').innerText = i18n[l].rating;
+                document.getElementById('lbl-your-review').innerText = i18n[l].yourReview;
+                document.getElementById('btn-submit-review').innerText = i18n[l].submitReview;
+                document.getElementById('lbl-duration').innerText = i18n[l].duration;
+                document.getElementById('lbl-difficulty').innerText = i18n[l].difficulty;
+                document.getElementById('lbl-group-size').innerText = i18n[l].groupSize;
+                document.getElementById('lbl-pickup').innerText = i18n[l].pickup;
+                document.getElementById('lbl-included').innerText = i18n[l].included;
+                document.getElementById('lbl-to-bring').innerText = i18n[l].bring;
+                renderTours();
+            }
+
+            // --- RENDER TOURS ---
+            async function renderTours(filter = '') {
+                const grid = document.getElementById('toursGrid');
+                const filteredTours = tours.filter(t => t.name[lang].toLowerCase().includes(filter.toLowerCase()));
+
+                let toursHTML = '';
+                filteredTours.forEach(tour => {
+                    toursHTML += `
+                        <div class="card" onclick="openTourDetails(${tour.id})">
+                            <div class="card-img" style="background-image: url('${tour.img}')">
+                                <div class="price-tag">$${tour.price} USD</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">${tour.name[lang]}</h3>
+                                <p class="card-text">${tour.desc[lang]}</p>
+                                <div class="rating">
+                                    <div class="stars" id="rating-stars-${tour.id}">☆☆☆☆☆</div>
+                                    <span class="rating-text" id="rating-text-${tour.id}">Loading...</span>
+                                </div>
+                                <div class="card-buttons">
+                                    <button class="btn-review" onclick="event.stopPropagation(); openTourReviews(${tour.id})">
+                                        <i class="fas fa-star"></i> ${i18n[lang].leaveReview}
+                                    </button>
+                                    <button class="btn-book" onclick="event.stopPropagation(); openTourBooking(${tour.id})">
+                                        ${i18n[lang].book}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = toursHTML;
+
+                filteredTours.forEach(async (tour) => {
+                    const reviews = await loadReviewsForTour(tour.id);
+                    const count = reviews.length;
+                    const avg = count ? (reviews.reduce((sum, r) => sum + r.rating, 0) / count).toFixed(1) : 0;
+                    const starsEl = document.getElementById(`rating-stars-${tour.id}`);
+                    const textEl = document.getElementById(`rating-text-${tour.id}`);
+                    if (starsEl) starsEl.innerText = renderStars(avg);
+                    if (textEl) textEl.innerText = `${avg > 0 ? avg : 'No'} ${count === 1 ? 'review' : 'reviews'}`;
+                });
+            }
+
+            // --- MODAL FUNCTIONS ---
+            window.openTourDetails = function(tourId) {
+                currentTourId = tourId;
+                const tour = tours.find(t => t.id === tourId);
+                if (!tour) return;
+
+                document.getElementById('detail-tour-name').innerText = tour.name[lang];
+                document.getElementById('detail-tour-price').innerText = `$${tour.price} USD`;
+                document.getElementById('booking-tour-name').innerText = tour.name[lang];
+                document.getElementById('booking-tour-price').innerText = `$${tour.price}.00 USD`;
+                document.getElementById('review-tour-name').innerText = tour.name[lang];
+
+                if (tour.details && tour.details[lang]) {
+                    const details = tour.details[lang];
+                    document.getElementById('detail-full-description').innerText = details.fullDescription;
+                    document.getElementById('detail-duration').innerText = details.duration;
+                    document.getElementById('detail-difficulty').innerText = details.difficulty;
+                    document.getElementById('detail-group-size').innerText = details.groupSize;
+                    document.getElementById('detail-pickup').innerText = details.pickup;
+
+                    let includedHTML = '';
+                    details.included.forEach(item => {
+                        includedHTML += `<li><i class="fas fa-check"></i> ${item}</li>`;
+                    });
+                    document.getElementById('detail-included').innerHTML = includedHTML;
+
+                    let toBringHTML = '';
+                    details.toBring.forEach(item => {
+                        toBringHTML += `<li><i class="fas fa-suitcase"></i> ${item}</li>`;
+                    });
+                    document.getElementById('detail-to-bring').innerHTML = toBringHTML;
+
+                    let galleryHTML = '';
+                    details.gallery.forEach(img => {
+                        galleryHTML += `<img src="${img}" alt="Tour image">`;
+                    });
+                    document.getElementById('detail-gallery').innerHTML = galleryHTML;
+                } else {
+                    document.getElementById('detail-full-description').innerText = tour.desc[lang];
+                    document.getElementById('detail-duration').innerText = "Full day";
+                    document.getElementById('detail-difficulty').innerText = "Easy";
+                    document.getElementById('detail-group-size').innerText = "Up to 20 people";
+                    document.getElementById('detail-pickup').innerText = "Yes";
+                    document.getElementById('detail-included').innerHTML = `
+                        <li><i class="fas fa-check"></i> Professional guide</li>
+                        <li><i class="fas fa-check"></i> Transportation</li>
+                        <li><i class="fas fa-check"></i> Basic equipment</li>
+                    `;
+                    document.getElementById('detail-to-bring').innerHTML = `
+                        <li><i class="fas fa-suitcase"></i> Sunscreen</li>
+                        <li><i class="fas fa-suitcase"></i> Swimwear</li>
+                        <li><i class="fas fa-suitcase"></i> Camera</li>
+                    `;
+                    document.getElementById('detail-gallery').innerHTML = `
+                        <img src="${tour.img}" alt="Tour image">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400" alt="Tour image">
+                        <img src="https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=400" alt="Tour image">
+                    `;
+                }
+
+                document.getElementById('travelDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('guests').value = '1';
+                updateTotalPrice();
+
+                document.getElementById('bookingLoginPrompt').style.display = currentUser ? 'none' : 'block';
+                document.getElementById('bookingFormContainer').style.display = currentUser ? 'block' : 'none';
+
+                loadReviewsForTour(tourId).then(reviews => {
+                    const count = reviews.length;
+                    const avg = count ? (reviews.reduce((sum, r) => sum + r.rating, 0) / count).toFixed(1) : 0;
+                    document.getElementById('detail-rating-stars').innerHTML = renderStars(avg);
+                    document.getElementById('detail-rating-text').innerText = `(${count} ${count === 1 ? 'review' : 'reviews'})`;
+                });
+
+                document.getElementById('tourModal').style.display = 'flex';
+                switchTourTab('details');
+            };
+
+            window.openTourReviews = async function(tourId) {
+                currentTourId = tourId;
+                const tour = tours.find(t => t.id === tourId);
+                if (!tour) return;
+                document.getElementById('review-tour-name').innerText = tour.name[lang];
+                const reviews = await loadReviewsForTour(tourId);
+                updateReviewDisplay(reviews);
+                document.getElementById('tourModal').style.display = 'flex';
+                switchTourTab('reviews');
+            };
+
+            window.openTourBooking = function(tourId) {
+                openTourDetails(tourId);
+                switchTourTab('booking');
+            };
+
+            window.switchTourTab = function(tabName) {
+                document.querySelectorAll('#tourModal .tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('#tourModal .tab-content').forEach(content => content.classList.remove('active'));
+                if (tabName === 'details') {
+                    document.getElementById('tabDetails').classList.add('active');
+                    document.getElementById('detailsTab').classList.add('active');
+                } else if (tabName === 'booking') {
+                    document.getElementById('tabBooking').classList.add('active');
+                    document.getElementById('bookingTab').classList.add('active');
+                } else {
+                    document.getElementById('tabReviews').classList.add('active');
+                    document.getElementById('reviewsTab').classList.add('active');
+                }
+            };
+
+            function updateReviewDisplay(reviews) {
+                const container = document.getElementById('reviewsList');
+                container.innerHTML = '';
+
+                if (!reviews || reviews.length === 0) {
+                    container.innerHTML = `<div class="no-reviews">${i18n[lang].noReviews}</div>`;
+                    document.getElementById('modal-rating-stars').innerHTML = '☆☆☆☆☆';
+                    document.getElementById('modal-rating-text').innerText = '(0 reviews)';
+                    return;
+                }
+
+                const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+                document.getElementById('modal-rating-stars').innerHTML = renderStars(avg);
+                document.getElementById('modal-rating-text').innerText = `(${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'})`;
+
+                reviews.forEach(r => {
+                    const date = new Date(r.created_at).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
+                        year: 'numeric', month: 'short', day: 'numeric'
+                    });
+                    container.innerHTML += `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <span class="review-name">${r.user_name}</span>
+                                <span class="review-date">${date}</span>
+                            </div>
+                            <div class="stars">${renderStars(r.rating)}</div>
+                            <p class="review-text">${r.review_text}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            window.submitReview = async function(event) {
+                event.preventDefault();
+
+                const name = document.getElementById('reviewerName').value;
+                const rating = document.querySelector('input[name="rating"]:checked');
+                const text = document.getElementById('reviewText').value;
+
+                if (!rating) {
+                    alert('Please select a rating');
+                    return;
+                }
+
+                const btn = document.getElementById('btn-submit-review');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + i18n[lang].loading;
+                btn.disabled = true;
+
+                const result = await saveReviewToSupabase({
+                    tourId: currentTourId,
+                    name: name,
+                    rating: parseInt(rating.value),
+                    text: text
+                });
+
+                if (result.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> ' + i18n[lang].success;
+
+                    document.getElementById('reviewerName').value = '';
+                    document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+                    document.getElementById('reviewText').value = '';
+
+                    const updatedReviews = await loadReviewsForTour(currentTourId);
+                    updateReviewDisplay(updatedReviews);
+
+                    const count = updatedReviews.length;
+                    const avg = count ? (updatedReviews.reduce((s, r) => s + r.rating, 0) / count).toFixed(1) : 0;
+                    const starsEl = document.getElementById(`rating-stars-${currentTourId}`);
+                    const textEl = document.getElementById(`rating-text-${currentTourId}`);
+                    if (starsEl) starsEl.innerText = renderStars(avg);
+                    if (textEl) textEl.innerText = `${avg > 0 ? avg : 'No'} ${count === 1 ? 'review' : 'reviews'}`;
+
+                    document.getElementById('detail-rating-stars').innerHTML = renderStars(avg);
+                    document.getElementById('detail-rating-text').innerText = `(${count} ${count === 1 ? 'review' : 'reviews'})`;
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }, 2000);
+                } else {
+                    alert('Error submitting review: ' + (result.error || 'Unknown error'));
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            };
+
+            window.filterTours = function() {
+                renderTours(document.getElementById('searchInput').value);
+            };
+
+            window.closeTourModal = function() {
+                document.getElementById('tourModal').style.display = 'none';
+                currentTourId = null;
+            };
 
             window.onclick = (e) => { 
                 if (e.target == document.getElementById('tourModal')) closeTourModal(); 
