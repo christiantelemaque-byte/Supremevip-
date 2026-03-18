@@ -642,7 +642,7 @@
 
     <script>
         (function() {
-            // ========== TOURS ARRAY (23 excursiones con imágenes proxy y videos actualizados) ==========
+            // ========== TOURS ARRAY (23 excursiones con imágenes proxy y videos) ==========
             const tours = [
                 { 
                     id: 1, 
@@ -994,7 +994,7 @@
                     id: 11, 
                     name: {en: "Dolphin Swim", es: "Nado con Delfines"}, 
                     price: 115, 
-                    img: "https://images.weserv.nl/?url=encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6vxpJq0TseoGm4_LU4f5dar4RA7Ew2VzEJe6jpj5zacVZUiTeOoUVA_km&s=10", 
+                    img: "https://images.weserv.nl/?url=media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/09/1f/f3/8b.jpg", 
                     desc: {en: "Interaction and swimming.", es: "Interacción y nado."},
                     video: "ZcU0lmP0Ejg",
                     details: {
@@ -1464,73 +1464,142 @@
 
             const i18n = {
                 en: {
-                    title: "Experience Paradise", sub: "The most exclusive excursions in the Dominican Republic",
-                    search: "Search adventures...", book: "Book Now", date: "Travel Date",
-                    name: "Full Name", card: "Card Number", exp: "Expiry (MM/YY)", pay: "Book & Pay Now",
-                    sTitle: "Payment Confirmed!", sBody: "Your booking has been confirmed. Check your email for details.",
-                    reviews: "Reviews", leaveReview: "Leave Review", noReviews: "No reviews yet",
-                    rating: "Rating", submitReview: "Submit Review", yourName: "Your Name",
-                    yourReview: "Your Review", booking: "Booking", details: "Details",
-                    loading: "Loading...", submit: "Submit", success: "Success!",
-                    email: "Email Address", guests: "Number of Guests",
-                    duration: "Duration", difficulty: "Difficulty", groupSize: "Group Size",
-                    pickup: "Pickup Included", included: "What's Included", bring: "What to Bring",
-                    login: "Login", signup: "Sign Up", password: "Password",
-                    fullName: "Full Name", cardholder: "Cardholder Name", cardDetails: "Card Details",
-                    totalPrice: "Total Price", loginPrompt: "Please log in to book this tour.",
-                    bookingTitle: "Book:", reviewsTitle: "Reviews for", leaveReviewTitle: "Leave a Review"
+                    title: "Experience Paradise",
+                    sub: "The most exclusive excursions in the Dominican Republic",
+                    search: "Search adventures...",
+                    book: "Book Now",
+                    date: "Travel Date",
+                    name: "Full Name",
+                    card: "Card Number",
+                    exp: "Expiry (MM/YY)",
+                    pay: "Book & Pay Now",
+                    sTitle: "Payment Confirmed!",
+                    sBody: "Your booking has been confirmed. Check your email for details.",
+                    reviews: "Reviews",
+                    leaveReview: "Leave Review",
+                    noReviews: "No reviews yet",
+                    rating: "Rating",
+                    submitReview: "Submit Review",
+                    yourName: "Your Name",
+                    yourReview: "Your Review",
+                    booking: "Booking",
+                    details: "Details",
+                    loading: "Loading...",
+                    submit: "Submit",
+                    success: "Success!",
+                    email: "Email Address",
+                    guests: "Number of Guests",
+                    duration: "Duration",
+                    difficulty: "Difficulty",
+                    groupSize: "Group Size",
+                    pickup: "Pickup Included",
+                    included: "What's Included",
+                    bring: "What to Bring",
+                    login: "Login",
+                    signup: "Sign Up",
+                    password: "Password",
+                    fullName: "Full Name",
+                    cardholder: "Cardholder Name",
+                    cardDetails: "Card Details",
+                    totalPrice: "Total Price",
+                    loginPrompt: "Please <a href='#' onclick='openAuthModal(); return false;'>log in</a> to book this tour.",
+                    bookingTitle: "Book:",
+                    reviewsTitle: "Reviews for",
+                    leaveReviewTitle: "Leave a Review"
                 },
                 es: {
-                    title: "Vive el Paraíso", sub: "Las excursiones más exclusivas de República Dominicana",
-                    search: "Buscar aventuras...", book: "Reservar Ahora", date: "Fecha del Viaje",
-                    name: "Nombre Completo", card: "Número de Tarjeta", exp: "Vencimiento (MM/AA)", pay: "Reservar y Pagar",
-                    sTitle: "¡Pago Confirmado!", sBody: "Su reserva ha sido confirmada. Revise su correo para más detalles.",
-                    reviews: "Reseñas", leaveReview: "Dejar Reseña", noReviews: "Aún no hay reseñas",
-                    rating: "Calificación", submitReview: "Enviar Reseña", yourName: "Tu Nombre",
-                    yourReview: "Tu Reseña", booking: "Reserva", details: "Detalles",
-                    loading: "Cargando...", submit: "Enviar", success: "¡Éxito!",
-                    email: "Correo Electrónico", guests: "Número de Invitados",
-                    duration: "Duración", difficulty: "Dificultad", groupSize: "Tamaño del Grupo",
-                    pickup: "Recogida Incluida", included: "Qué Incluye", bring: "Qué Llevar",
-                    login: "Iniciar Sesión", signup: "Registrarse", password: "Contraseña",
-                    fullName: "Nombre Completo", cardholder: "Nombre del Titular", cardDetails: "Detalles de la Tarjeta",
-                    totalPrice: "Precio Total", loginPrompt: "Por favor, inicia sesión para reservar este tour.",
-                    bookingTitle: "Reservar:", reviewsTitle: "Reseñas de", leaveReviewTitle: "Deja una Reseña"
+                    title: "Vive el Paraíso",
+                    sub: "Las excursiones más exclusivas de República Dominicana",
+                    search: "Buscar aventuras...",
+                    book: "Reservar Ahora",
+                    date: "Fecha del Viaje",
+                    name: "Nombre Completo",
+                    card: "Número de Tarjeta",
+                    exp: "Vencimiento (MM/AA)",
+                    pay: "Reservar y Pagar",
+                    sTitle: "¡Pago Confirmado!",
+                    sBody: "Su reserva ha sido confirmada. Revise su correo para más detalles.",
+                    reviews: "Reseñas",
+                    leaveReview: "Dejar Reseña",
+                    noReviews: "Aún no hay reseñas",
+                    rating: "Calificación",
+                    submitReview: "Enviar Reseña",
+                    yourName: "Tu Nombre",
+                    yourReview: "Tu Reseña",
+                    booking: "Reserva",
+                    details: "Detalles",
+                    loading: "Cargando...",
+                    submit: "Enviar",
+                    success: "¡Éxito!",
+                    email: "Correo Electrónico",
+                    guests: "Número de Invitados",
+                    duration: "Duración",
+                    difficulty: "Dificultad",
+                    groupSize: "Tamaño del Grupo",
+                    pickup: "Recogida Incluida",
+                    included: "Qué Incluye",
+                    bring: "Qué Llevar",
+                    login: "Iniciar Sesión",
+                    signup: "Registrarse",
+                    password: "Contraseña",
+                    fullName: "Nombre Completo",
+                    cardholder: "Nombre del Titular",
+                    cardDetails: "Detalles de la Tarjeta",
+                    totalPrice: "Precio Total",
+                    loginPrompt: "Por favor, <a href='#' onclick='openAuthModal(); return false;'>inicia sesión</a> para reservar este tour.",
+                    bookingTitle: "Reservar:",
+                    reviewsTitle: "Reseñas de",
+                    leaveReviewTitle: "Deja una Reseña"
                 }
             };
 
-            // --- FUNCIÓN DE IDIOMA COMPLETA ---
+            // --- FUNCIÓN DE IDIOMA COMPLETA (AHORA ACTUALIZA TODOS LOS TEXTOS) ---
             function setLang(l) {
                 lang = l;
+                // Actualizar clases de los botones de idioma
                 document.getElementById('en-btn').classList.toggle('active', l === 'en');
                 document.getElementById('es-btn').classList.toggle('active', l === 'es');
+
+                // Textos principales
                 document.getElementById('hero-title').innerText = i18n[l].title;
                 document.getElementById('hero-sub').innerText = i18n[l].sub;
                 document.getElementById('searchInput').placeholder = i18n[l].search;
+
+                // Tabs del modal de tour
                 document.getElementById('tabDetails').innerText = i18n[l].details;
                 document.getElementById('tabBooking').innerText = i18n[l].booking;
                 document.getElementById('tabReviews').innerText = i18n[l].reviews;
-                document.getElementById('lbl-date').innerText = i18n[l].date;
-                document.getElementById('lbl-guests').innerText = i18n[l].guests;
-                document.getElementById('lbl-total-price').innerText = i18n[l].totalPrice;
-                document.getElementById('lbl-cardholder').innerText = i18n[l].cardholder;
-                document.getElementById('lbl-card-details').innerText = i18n[l].cardDetails;
-                document.getElementById('btn-pay-now').innerText = i18n[l].pay;
-                document.getElementById('msg-success-title').innerText = i18n[l].sTitle;
-                document.getElementById('msg-success-body').innerText = i18n[l].sBody;
+
+                // Etiquetas de la pestaña de detalles
                 document.getElementById('lbl-duration').innerText = i18n[l].duration;
                 document.getElementById('lbl-difficulty').innerText = i18n[l].difficulty;
                 document.getElementById('lbl-group-size').innerText = i18n[l].groupSize;
                 document.getElementById('lbl-pickup').innerText = i18n[l].pickup;
                 document.getElementById('lbl-included').innerText = i18n[l].included;
                 document.getElementById('lbl-to-bring').innerText = i18n[l].bring;
+
+                // Títulos y etiquetas de la pestaña de reserva
+                document.getElementById('booking-title').innerHTML = i18n[l].bookingTitle + ' <span id="booking-tour-name"></span>';
+                document.getElementById('lbl-date').innerText = i18n[l].date;
+                document.getElementById('lbl-guests').innerText = i18n[l].guests;
+                document.getElementById('lbl-total-price').innerText = i18n[l].totalPrice;
+                document.getElementById('lbl-cardholder').innerText = i18n[l].cardholder;
+                document.getElementById('lbl-card-details').innerText = i18n[l].cardDetails;
+                document.getElementById('btn-pay-now').innerText = i18n[l].pay;
+                document.getElementById('booking-login-prompt').innerHTML = i18n[l].loginPrompt;
+                document.getElementById('msg-success-title').innerText = i18n[l].sTitle;
+                document.getElementById('msg-success-body').innerText = i18n[l].sBody;
+
+                // Títulos y etiquetas de la pestaña de reseñas
+                document.getElementById('reviews-title').innerHTML = i18n[l].reviewsTitle + ' <span id="review-tour-name"></span>';
+                document.getElementById('no-reviews-msg').innerText = i18n[l].noReviews;
+                document.getElementById('leave-review-title').innerText = i18n[l].leaveReviewTitle;
                 document.getElementById('lbl-your-name').innerText = i18n[l].yourName;
                 document.getElementById('lbl-rating').innerText = i18n[l].rating;
                 document.getElementById('lbl-your-review').innerText = i18n[l].yourReview;
                 document.getElementById('btn-submit-review').innerText = i18n[l].submitReview;
-                document.getElementById('no-reviews-msg').innerText = i18n[l].noReviews;
-                document.getElementById('booking-login-prompt').innerHTML = i18n[l].loginPrompt.replace('log in', '<a href="#" onclick="openAuthModal(); return false;">' + (l === 'en' ? 'log in' : 'inicia sesión') + '</a>');
-                // Login/Signup modal
+
+                // Modal de autenticación
                 document.getElementById('tabLogin').innerText = i18n[l].login;
                 document.getElementById('tabSignup').innerText = i18n[l].signup;
                 document.getElementById('lbl-email-login').innerText = i18n[l].email;
@@ -1540,10 +1609,12 @@
                 document.getElementById('lbl-email-signup').innerText = i18n[l].email;
                 document.getElementById('lbl-password-signup').innerText = i18n[l].password;
                 document.getElementById('btn-signup').innerText = i18n[l].signup;
+
+                // Volver a renderizar las excursiones para actualizar los textos de las tarjetas (títulos, descripciones, botones)
                 renderTours();
             }
 
-            // --- FUNCIONES DE AUTENTICACIÓN ---
+            // --- FUNCIONES DE AUTENTICACIÓN (sin cambios) ---
             async function loadUser() {
                 try {
                     const { data: { user } } = await supabase.auth.getUser();
@@ -1572,12 +1643,12 @@
                 if (currentUser) {
                     menu.innerHTML = `
                         <span class="user-email">${currentUser.email}</span>
-                        <a href="profile.html" class="btn-profile">Profile</a>
-                        <button class="btn-logout" onclick="logout()">Logout</button>
+                        <a href="profile.html" class="btn-profile">${i18n[lang].login === 'Login' ? 'Profile' : 'Perfil'}</a>
+                        <button class="btn-logout" onclick="logout()">${i18n[lang].login === 'Login' ? 'Logout' : 'Cerrar Sesión'}</button>
                     `;
                 } else {
                     menu.innerHTML = `
-                        <button class="btn-auth" onclick="openAuthModal()">Sign Up / Login</button>
+                        <button class="btn-auth" onclick="openAuthModal()">${i18n[lang].login === 'Login' ? 'Sign Up / Login' : 'Registrarse / Iniciar Sesión'}</button>
                     `;
                 }
             }
@@ -1621,14 +1692,14 @@
                 const messageDiv = document.getElementById('signupMessage');
                 form.style.display = 'none';
                 messageDiv.style.display = 'block';
-                messageDiv.innerHTML = '<div class="spinner"></div><p>Creating account...</p>';
+                messageDiv.innerHTML = '<div class="spinner"></div><p>' + (lang === 'en' ? 'Creating account...' : 'Creando cuenta...') + '</p>';
                 try {
                     const { error } = await supabase.auth.signUp({ 
                         email, password,
                         options: { data: { full_name: fullName } }
                     });
                     if (error) {
-                        messageDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p><button onclick="window.location.reload()" class="btn-auth">Try Again</button>`;
+                        messageDiv.innerHTML = `<p style="color: red;">${lang === 'en' ? 'Error: ' + error.message : 'Error: ' + error.message}</p><button onclick="window.location.reload()" class="btn-auth">${lang === 'en' ? 'Try Again' : 'Intentar de Nuevo'}</button>`;
                         setTimeout(() => {
                             form.style.display = 'block';
                             messageDiv.style.display = 'none';
@@ -1636,8 +1707,8 @@
                     } else {
                         messageDiv.innerHTML = `
                             <i class="fas fa-check-circle" style="font-size: 50px; color: #4caf50;"></i>
-                            <h3>Sign up successful!</h3>
-                            <p>You will be redirected to the homepage.</p>
+                            <h3>${lang === 'en' ? 'Sign up successful!' : '¡Registro exitoso!'}</h3>
+                            <p>${lang === 'en' ? 'You will be redirected to the homepage.' : 'Serás redirigido a la página principal.'}</p>
                         `;
                         setTimeout(() => {
                             closeAuthModal();
@@ -1645,7 +1716,7 @@
                         }, 2000);
                     }
                 } catch (err) {
-                    messageDiv.innerHTML = `<p style="color: red;">Network error: ${err.message}</p><button onclick="window.location.reload()" class="btn-auth">Try Again</button>`;
+                    messageDiv.innerHTML = `<p style="color: red;">${lang === 'en' ? 'Network error: ' + err.message : 'Error de red: ' + err.message}</p><button onclick="window.location.reload()" class="btn-auth">${lang === 'en' ? 'Try Again' : 'Intentar de Nuevo'}</button>`;
                 }
             };
 
@@ -1656,7 +1727,7 @@
                 updateUserMenu();
             };
 
-            // --- FUNCIONES DE RESEÑAS ---
+            // --- FUNCIONES DE RESEÑAS (sin cambios) ---
             async function loadReviewsForTour(tourId) {
                 if (!supabase) return [];
                 try {
@@ -1698,7 +1769,7 @@
                 }
             }
 
-            // --- FUNCIONES DE RESERVA ---
+            // --- FUNCIONES DE RESERVA (sin cambios) ---
             window.updateTotalPrice = function() {
                 const tour = tours.find(t => t.id === currentTourId);
                 if (!tour) return;
@@ -1719,12 +1790,12 @@
             window.processBooking = async function(e) {
                 e.preventDefault();
                 if (!currentUser) {
-                    alert('You must be logged in to book.');
+                    alert(lang === 'en' ? 'You must be logged in to book.' : 'Debes iniciar sesión para reservar.');
                     openAuthModal();
                     return;
                 }
                 if (!stripe || !cardElement) {
-                    alert('Payment system not configured.');
+                    alert(lang === 'en' ? 'Payment system not configured.' : 'Sistema de pago no configurado.');
                     return;
                 }
                 const tour = tours.find(t => t.id === currentTourId);
@@ -1734,7 +1805,7 @@
                 const cardholderName = document.getElementById('cardholderName').value;
                 const btn = document.getElementById('btn-pay-now');
                 const originalText = btn.innerText;
-                btn.innerText = 'Processing...';
+                btn.innerText = lang === 'en' ? 'Processing...' : 'Procesando...';
                 btn.disabled = true;
                 try {
                     const response = await fetch(`${PROXY_URL}/api/create-payment-intent`, {
@@ -1779,7 +1850,7 @@
                         if (cardElement) cardElement.clear();
                     }, 3000);
                 } catch (err) {
-                    alert('Payment error: ' + err.message);
+                    alert(lang === 'en' ? 'Payment error: ' + err.message : 'Error de pago: ' + err.message);
                     btn.innerText = originalText;
                     btn.disabled = false;
                 }
@@ -1800,7 +1871,7 @@
                 if (!grid) return;
                 const filtered = tours.filter(t => t.name[lang].toLowerCase().includes(filter.toLowerCase()));
                 if (filtered.length === 0) {
-                    grid.innerHTML = '<p class="no-results">No excursions found.</p>';
+                    grid.innerHTML = '<p class="no-results">' + (lang === 'en' ? 'No excursions found.' : 'No se encontraron excursiones.') + '</p>';
                     return;
                 }
                 let html = '';
@@ -1837,11 +1908,11 @@
                     const starsEl = document.getElementById(`rating-stars-${tour.id}`);
                     const textEl = document.getElementById(`rating-text-${tour.id}`);
                     if (starsEl) starsEl.innerText = renderStars(avg);
-                    if (textEl) textEl.innerText = `${avg > 0 ? avg : 'No'} ${count === 1 ? 'review' : 'reviews'}`;
+                    if (textEl) textEl.innerText = `${avg > 0 ? avg : (lang === 'en' ? 'No' : 'Sin')} ${count === 1 ? (lang === 'en' ? 'review' : 'reseña') : (lang === 'en' ? 'reviews' : 'reseñas')}`;
                 });
             }
 
-            // --- FUNCIÓN PARA ABRIR DETALLES CON VIDEO Y DETENERLO AL CERRAR ---
+            // --- FUNCIÓN PARA ABRIR DETALLES CON VIDEO Y DETENERLO AL CERRAR (sin cambios) ---
             window.openTourDetails = function(tourId) {
                 currentTourId = tourId;
                 const tour = tours.find(t => t.id === tourId);
@@ -1892,19 +1963,19 @@
                 } else {
                     // fallback
                     document.getElementById('detail-full-description').innerText = tour.desc[lang];
-                    document.getElementById('detail-duration').innerText = "Full day";
-                    document.getElementById('detail-difficulty').innerText = "Easy";
-                    document.getElementById('detail-group-size').innerText = "Up to 20 people";
-                    document.getElementById('detail-pickup').innerText = "Yes";
+                    document.getElementById('detail-duration').innerText = lang === 'en' ? "Full day" : "Día completo";
+                    document.getElementById('detail-difficulty').innerText = lang === 'en' ? "Easy" : "Fácil";
+                    document.getElementById('detail-group-size').innerText = lang === 'en' ? "Up to 20 people" : "Hasta 20 personas";
+                    document.getElementById('detail-pickup').innerText = lang === 'en' ? "Yes" : "Sí";
                     document.getElementById('detail-included').innerHTML = `
-                        <li><i class="fas fa-check"></i> Professional guide</li>
-                        <li><i class="fas fa-check"></i> Transportation</li>
-                        <li><i class="fas fa-check"></i> Basic equipment</li>
+                        <li><i class="fas fa-check"></i> ${lang === 'en' ? 'Professional guide' : 'Guía profesional'}</li>
+                        <li><i class="fas fa-check"></i> ${lang === 'en' ? 'Transportation' : 'Transporte'}</li>
+                        <li><i class="fas fa-check"></i> ${lang === 'en' ? 'Basic equipment' : 'Equipo básico'}</li>
                     `;
                     document.getElementById('detail-to-bring').innerHTML = `
-                        <li><i class="fas fa-suitcase"></i> Sunscreen</li>
-                        <li><i class="fas fa-suitcase"></i> Swimwear</li>
-                        <li><i class="fas fa-suitcase"></i> Camera</li>
+                        <li><i class="fas fa-suitcase"></i> ${lang === 'en' ? 'Sunscreen' : 'Protector solar'}</li>
+                        <li><i class="fas fa-suitcase"></i> ${lang === 'en' ? 'Swimwear' : 'Traje de baño'}</li>
+                        <li><i class="fas fa-suitcase"></i> ${lang === 'en' ? 'Camera' : 'Cámara'}</li>
                     `;
                     document.getElementById('detail-gallery').innerHTML = `
                         <img src="${tour.img}" alt="Tour image">
@@ -1926,7 +1997,7 @@
                     const count = reviews.length;
                     const avg = count ? (reviews.reduce((s, r) => s + r.rating, 0) / count).toFixed(1) : 0;
                     document.getElementById('detail-rating-stars').innerHTML = renderStars(avg);
-                    document.getElementById('detail-rating-text').innerText = `(${count} ${count === 1 ? 'review' : 'reviews'})`;
+                    document.getElementById('detail-rating-text').innerText = `(${count} ${count === 1 ? (lang === 'en' ? 'review' : 'reseña') : (lang === 'en' ? 'reviews' : 'reseñas')})`;
                 });
 
                 document.getElementById('tourModal').style.display = 'flex';
@@ -1969,7 +2040,7 @@
                 }
                 const avg = (reviews.reduce((s,r)=>s+r.rating,0)/reviews.length).toFixed(1);
                 document.getElementById('modal-rating-stars').innerHTML = renderStars(avg);
-                document.getElementById('modal-rating-text').innerText = `(${reviews.length} ${reviews.length===1?'review':'reviews'})`;
+                document.getElementById('modal-rating-text').innerText = `(${reviews.length} ${reviews.length===1?(lang==='en'?'review':'reseña'):(lang==='en'?'reviews':'reseñas')})`;
                 reviews.forEach(r => {
                     const date = new Date(r.created_at).toLocaleDateString(lang==='es'?'es-ES':'en-US', { year:'numeric', month:'short', day:'numeric' });
                     container.innerHTML += `
@@ -1987,7 +2058,7 @@
                 const name = document.getElementById('reviewerName').value;
                 const rating = document.querySelector('input[name="rating"]:checked');
                 const text = document.getElementById('reviewText').value;
-                if (!rating) return alert('Please select a rating');
+                if (!rating) return alert(lang === 'en' ? 'Please select a rating' : 'Por favor selecciona una calificación');
                 const btn = document.getElementById('btn-submit-review');
                 const original = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + i18n[lang].loading;
@@ -2005,12 +2076,12 @@
                     const starsEl = document.getElementById(`rating-stars-${currentTourId}`);
                     const textEl = document.getElementById(`rating-text-${currentTourId}`);
                     if (starsEl) starsEl.innerText = renderStars(avg);
-                    if (textEl) textEl.innerText = `${avg>0?avg:'No'} ${count===1?'review':'reviews'}`;
+                    if (textEl) textEl.innerText = `${avg>0?avg:(lang==='en'?'No':'Sin')} ${count===1?(lang==='en'?'review':'reseña'):(lang==='en'?'reviews':'reseñas')}`;
                     document.getElementById('detail-rating-stars').innerHTML = renderStars(avg);
-                    document.getElementById('detail-rating-text').innerText = `(${count} ${count===1?'review':'reviews'})`;
+                    document.getElementById('detail-rating-text').innerText = `(${count} ${count===1?(lang==='en'?'review':'reseña'):(lang==='en'?'reviews':'reseñas')})`;
                     setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 2000);
                 } else {
-                    alert('Error: ' + (result.error || 'Unknown'));
+                    alert(lang === 'en' ? 'Error: ' + (result.error || 'Unknown') : 'Error: ' + (result.error || 'Desconocido'));
                     btn.innerHTML = original;
                     btn.disabled = false;
                 }
@@ -2021,10 +2092,9 @@
             };
 
             window.closeTourModal = function() {
-                // Detener el video antes de cerrar
                 const videoPlayer = document.getElementById('video-player');
                 if (videoPlayer) {
-                    videoPlayer.src = ''; // Esto detiene la reproducción
+                    videoPlayer.src = '';
                 }
                 document.getElementById('tourModal').style.display = 'none';
                 if (cardElement) cardElement.unmount();
@@ -2060,4 +2130,4 @@
         })();
     </script>
 </body>
-    </html>
+        </html>
